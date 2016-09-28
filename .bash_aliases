@@ -17,3 +17,9 @@ alias drracket='/Applications/Racket\ v6.4/bin/drracket'
 
 #Commandline racket
 alias racket='/Applications/Racket\ v6.4/bin/racket'
+
+#Git log alias
+alias gl='git log --graph --oneline --decorate --all'
+
+#Git status alias
+alias gis='git status'
