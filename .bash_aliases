@@ -6,7 +6,7 @@
 alias g++='g++ -Wall -std=c++11'
 
 #Allow gcc to default include comments
-alias gcc='gcc -Wall'
+alias gcc='gcc -Wall' # -pie -fPIE' # Comment in when security matters
 
 #To prevent from forgetting the -E
 alias sudofish='sudo -E fish'
@@ -17,8 +17,13 @@ alias gl='git log --graph --oneline --decorate --all'
 #Git status alias
 alias gis='git status'
 
+#Objdump default intel
+alias objdump='objdump -M intel'
 
 #-------------------Computer specific-------------------
+
+#Path to qmake
+alias qmake='/Applications/Qt/5.7/clang_64/bin/qmake'
 
 #Allow purge to run without sudo
 alias purge='sudo purge'
