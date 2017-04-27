@@ -1,38 +1,52 @@
-#Read by both bash and fish
+# Read by both bash and fish
 
-#--------------------General purpose-------------------- 
+# -------------------- Exports -------------------- 
 
-#Allow g++ to default to c++ 11 with comments
+# My github
+export GT='https://www.github.com/zwimer/'
+
+# --------------------General purpose-------------------- 
+
+# Allow g++ to default to c++ 11 with comments
 alias g++='g++ -Wall -std=c++11'
 
-#Allow gcc to default include comments
-alias gcc='gcc -Wall' # -pie -fPIE' # Comment in when security matters
+# Allow gcc to default include comments
+alias gcc='gcc -Wall' #  -pie -fPIE' #  Comment in when security matters
 
-#To prevent from forgetting the -E
+# To prevent from forgetting the -E
 alias sudofish='sudo -E fish'
 
-#Git log alias
+# Git log alias
 alias gl='git log --graph --oneline --decorate --all'
 
-#Git status alias
+# Git status alias
 alias gis='git status'
 
-#Objdump default intel
+# Objdump default intel
 alias objdump='objdump -M intel'
 
-#-------------------Computer specific-------------------
+# vim
+alias vim='vim -p'
 
-#Path to qmake
+# ls -la
+alias la='ls -la'
+
+# Octave
+alias octave='octave --no-gui'
+
+# -------------------Computer specific-------------------
+
+# Path to qmake
 alias qmake='/Applications/Qt/5.7/clang_64/bin/qmake'
 
-#Allow purge to run without sudo
+# Allow purge to run without sudo
 alias purge='sudo purge'
 
-#Drracket
+# Drracket
 alias drracket='/Applications/Racket\ v6.4/bin/drracket'
 
-#Commandline racket
+# Commandline racket
 alias racket='/Applications/Racket\ v6.4/bin/racket'
 
-#Make java script easier
+# Make java script easier
 alias js="/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Resources/jsc"
