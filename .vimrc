@@ -19,7 +19,7 @@ Plugin 'VundleVim/Vundle.vim'
 
 "Plugins
 Plugin 'lervag/vimtex'
-"Plugin 'Valloric/YouCompleteMe'
+Plugin 'Valloric/YouCompleteMe'
 Plugin 'https://github.com/tpope/vim-commentary'
 Plugin 'https://github.com/vim-scripts/haskell.vim'
 "Bundle 'https://github.com/emgram769/vim-multiuser'
@@ -68,6 +68,9 @@ set mouse=nic
 "Map l to @q and ; to @w
 nnoremap l @q
 nnoremap ; @w
+
+" Remap U to u
+nnoremap U u
 
 "Allow many tabs
 set tabpagemax=50
