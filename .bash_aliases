@@ -1,4 +1,4 @@
-# Read by both bash and fish
+# Read by all shells
 
 # -------------------- Exports -------------------- 
 
@@ -8,10 +8,10 @@ export GT='https://www.github.com/zwimer/'
 # --------------------General purpose-------------------- 
 
 # Allow g++ to default to c++ 11 with comments
-alias g++='g++ -Wall -std=c++11'
+alias g++='g++-6 -Wall -std=c++11'
 
 # Allow gcc to default include comments
-alias gcc='gcc -Wall' #  -pie -fPIE' #  Comment in when security matters
+alias gcc='gcc-7 -Wall' #  -pie -fPIE' #  Comment in when security matters
 
 # To prevent from forgetting the -E
 alias sudofish='sudo -E fish'
@@ -33,6 +33,9 @@ alias la='ls -la'
 
 # Octave
 alias octave='octave --no-gui'
+
+# Matlab
+alias matlab='/Applications/MATLAB_R2015a.app/bin/matlab -nodesktop'
 
 # -------------------Computer specific-------------------
 
