@@ -5,16 +5,7 @@
 # My github
 export GT='https://www.github.com/zwimer/'
 
-# --------------------General purpose-------------------- 
-
-# Allow g++ to default to c++ 11 with comments
-alias g++='g++-6 -Wall -std=c++11'
-
-# Allow gcc to default include comments
-alias gcc='gcc-7 -Wall' #  -pie -fPIE' #  Comment in when security matters
-
-# To prevent from forgetting the -E
-alias sudofish='sudo -E fish'
+# ------------------- General purpose ------------------- 
 
 # Git log alias
 alias gl='git log --graph --oneline --decorate --all'
@@ -34,10 +25,16 @@ alias la='ls -la'
 # Octave
 alias octave='octave --no-gui'
 
+# ------------------ Computer specific ------------------
+
+# Allow g++ to default to c++ 11 with comments
+alias g++='g++-6 -Wall -std=c++11'
+
+# Allow gcc to default include comments
+alias gcc='gcc-7 -Wall' #  -pie -fPIE' #  Comment in when security matters
+
 # Matlab
 alias matlab='/Applications/MATLAB_R2015a.app/bin/matlab -nodesktop'
-
-# -------------------Computer specific-------------------
 
 # Path to qmake
 alias qmake='/Applications/Qt/5.7/clang_64/bin/qmake'
