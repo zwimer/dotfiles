@@ -28,6 +28,9 @@ Plugin 'https://github.com/vim-scripts/haskell.vim'
 call vundle#end()            " required
 filetype plugin indent on    " required
 
+" Disable YouCOmpleteMe scratch spaces
+set completeopt-=preview
+
 "Show information
 set number
 set showmode
@@ -39,6 +42,9 @@ set wildmenu
 filetype on
 filetype indent on
 syntax on
+
+"Auto indent
+set autoindent
 
 "Text format
 set tabstop=4
