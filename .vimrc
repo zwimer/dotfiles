@@ -20,6 +20,7 @@ Plugin 'VundleVim/Vundle.vim'
 "Plugins
 Plugin 'lervag/vimtex'
 Plugin 'Valloric/YouCompleteMe'
+Plugin 'https://github.com/tpope/vim-surround'
 Plugin 'https://github.com/tpope/vim-commentary'
 Plugin 'https://github.com/vim-scripts/haskell.vim'
 "Bundle 'https://github.com/emgram769/vim-multiuser'
