@@ -69,8 +69,8 @@ set ruler
 "Allow backspace key
 set backspace=indent,eol,start
 
-"Allow the mouse to be used for everything but visual mode
-set mouse=nic
+"Allow the mouse to be used for everything
+set mouse=a
 
 "Map l to @q and ; to @w
 nnoremap l @q
