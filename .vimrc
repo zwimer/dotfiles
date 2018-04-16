@@ -20,10 +20,9 @@ Plugin 'VundleVim/Vundle.vim'
 "Plugins
 Plugin 'lervag/vimtex'
 Plugin 'Valloric/YouCompleteMe'
-Plugin 'https://github.com/tpope/vim-surround'
-Plugin 'https://github.com/tpope/vim-commentary'
-Plugin 'https://github.com/vim-scripts/haskell.vim'
-"Bundle 'https://github.com/emgram769/vim-multiuser'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-commentary'
+Plugin 'vim-scripts/haskell.vim'
 
 "All of your Plugins must be added before the following line
 call vundle#end()            " required
