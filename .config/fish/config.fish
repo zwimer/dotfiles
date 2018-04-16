@@ -1,4 +1,4 @@
-source ~/.bash_aliases
+source ~/.shell_aliases
 
 #Add !! command to fish
 alias !!='eval command "$history[1]"'
