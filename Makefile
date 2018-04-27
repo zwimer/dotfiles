@@ -69,6 +69,7 @@ tmux_helper:
 vim_helper:
 	sudo apt-get install build-essential cmake -y
 	sudo apt-get install python-dev python3-dev -y
+	sudo apt-get install python-pip python-dev build-essential -y
 	mv ~/.vimrc ~/.vimrc.old || true
 	cp ./.vimrc ~/.vimrc
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim || true
