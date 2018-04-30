@@ -71,7 +71,7 @@ tmux_helper:
 
 
 .PHONY: vim_you_complete_me
-you_complete_me:
+vim_you_complete_me:
 	sudo apt-get install build-essential cmake -y
 	sudo apt-get install python-dev python3-dev -y
 	sudo apt-get install python-pip python-dev build-essential -y
@@ -81,8 +81,8 @@ you_complete_me:
 .PHONY: vim_after
 vim_after:
 	mkdir -p ~/.vim/after/
-	mv ~/.vim/after/gutter.vim ~/.vim/after/gutter.vim.old
-	mv ./gutter.vim ~/.vim/after/gutter.vim
+	mv ~/.vim/after/gutter.vim ~/.vim/after/gutter.vim.old || true
+	cp ./gutter.vim ~/.vim/after/gutter.vim
 
 .PHONY: vim_plugins
 vim_plugins:
