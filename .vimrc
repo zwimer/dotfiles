@@ -85,6 +85,8 @@ set paste
 " Note this must be set after paste
 set ruler
 
+" Vimtex disable callbacks
+let g:vimtex_compiler_latexmk = {'callback' : 0}
 
 " Disable YouCompleteMe scratch spaces
 set completeopt-=preview
