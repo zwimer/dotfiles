@@ -62,10 +62,6 @@ set shiftwidth=4
 set hlsearch
 set incsearch
 
-" Display cursor info
-" Note this must be set after paste
-set ruler
-
 " Allow backspace key
 set backspace=indent,eol,start
 
@@ -84,6 +80,10 @@ set tabpagemax=50
 
 " Allow pasting
 set paste
+
+" Display cursor info
+" Note this must be set after paste
+set ruler
 
 
 " Disable YouCompleteMe scratch spaces
