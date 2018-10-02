@@ -53,10 +53,20 @@ ZSH_THEME="fishy"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(zsh-syntax-highlighting history-substring-search zsh-autosuggestions)
+plugins=(history-substring-search zsh-autosuggestions zsh-syntax-highlighting)
 
 
 source $ZSH/oh-my-zsh.sh
+
+# Alter color scheme
+typeset -A ZSH_HIGHLIGHT_STYLES
+ZSH_HIGHLIGHT_STYLES[default]='fg=39'
+ZSH_HIGHLIGHT_STYLES[globbing]='fg=135,underline'
+ZSH_HIGHLIGHT_STYLES[builtin]='fg=26'
+ZSH_HIGHLIGHT_STYLES[command]='fg=26'
+ZSH_HIGHLIGHT_STYLES[arg0]='fg=26'
+ZSH_HIGHLIGHT_STYLES[redirection]='fg=213'
+ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=213'
 
 
 # User configuration
