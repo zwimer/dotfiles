@@ -53,10 +53,13 @@ ZSH_THEME="fishy"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(history-substring-search zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(vagrant python pip sudo history-substring-search zsh-autosuggestions zsh-syntax-highlighting)
 
 
 source $ZSH/oh-my-zsh.sh
+
+# Change the prompt (don't use PS1)
+# PROMPT="%n@%m %{$fg[$user_color]%}$(_fishy_collapsed_wd)%{$reset_color%}%(!.#.>) "
 
 # Alter color scheme
 typeset -A ZSH_HIGHLIGHT_STYLES
