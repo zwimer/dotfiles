@@ -1,11 +1,11 @@
 # Read by all shells
 
-# -------------------- Exports -------------------- 
+# -------------------- Exports --------------------
 
 # My github
 export GT='https://www.github.com/zwimer/'
 
-# ------------------- General purpose ------------------- 
+# ------------------- General purpose -------------------
 
 # Git log alias
 alias gl='git log --graph --oneline --decorate --all'
@@ -20,7 +20,7 @@ alias objdump='objdump -M intel'
 alias vim='vim -p'
 
 # ls -la
-alias la='ls -la'
+alias la='ls -lAG'
 
 # Octave
 alias octave='octave --no-gui'
@@ -31,7 +31,7 @@ alias octave='octave --no-gui'
 alias g++='g++-6 -Wall -std=c++11'
 
 # Allow gcc to default include comments
-alias gcc='gcc-7 -Wall' #  -pie -fPIE' #  Comment in when security matters
+alias gcc='gcc -Wall' #  -pie -fPIE' #  Comment in when security matters
 
 # Matlab
 alias matlab='/Applications/MATLAB_R2015a.app/bin/matlab -nodesktop'
