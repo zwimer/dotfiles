@@ -37,7 +37,7 @@ ZSH_THEME="fishy"
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
@@ -53,8 +53,11 @@ ZSH_THEME="fishy"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(vagrant python pip sudo history-substring-search zsh-autosuggestions zsh-syntax-highlighting)
 
-
 source $ZSH/oh-my-zsh.sh
+
+
+# User configuration
+
 
 # Change the prompt (don't use PS1)
 # PROMPT="%n@%m %{$fg[$user_color]%}$(_fishy_collapsed_wd)%{$reset_color%}%(!.#.>) "
@@ -70,25 +73,10 @@ ZSH_HIGHLIGHT_STYLES[redirection]='fg=213'
 ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=213'
 
 
-# User configuration
-
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -100,6 +88,6 @@ ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=213'
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # Aliases
-source ~/.shell_aliases
+source ~/.shell_init
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"

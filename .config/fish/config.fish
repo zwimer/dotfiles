@@ -1,4 +1,4 @@
-source ~/.shell_aliases
+source ~/.shell_init
 
 #Add !! command to fish
 alias !!='eval command "$history[1]"'
@@ -12,5 +12,5 @@ function sudo
     end
 end
 
-#Allow iTerm shell integration for fish 
+#Allow iTerm shell integration for fish
 test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish

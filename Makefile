@@ -5,7 +5,7 @@
 
 .PHONY: aliases
 aliases:
-	cp ./.shell_aliases ~/.shell_aliases
+	cp ./.shell_init ~/.shell_init
 
 .PHONY: bash
 bash: aliases bash_helper

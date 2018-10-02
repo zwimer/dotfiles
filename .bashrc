@@ -1,2 +1,2 @@
 source /etc/bashrc
-source ~/.shell_aliases
+source ~/.shell_init
