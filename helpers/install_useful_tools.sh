@@ -4,7 +4,7 @@
 apt-get install -y \
 	ipython parallel git make gcc g++ pandoc software-properties-common vim build-essential	\
 	fish zsh tmux python3-dev python-pip python-dev cmake libboost-all-dev doxygen gdb htop	\
-	vagrant python3-pip apt-transport-https ca-certificates curl gnupg-agent
+	vagrant python3-pip apt-transport-https ca-certificates curl gnupg-agent rlwrap
 
 # Docker
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
