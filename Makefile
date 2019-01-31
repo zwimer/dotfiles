@@ -22,8 +22,11 @@ tmux: update tmux_helper
 .PHONY: vim
 vim: update vim_helper
 
+.PHONY: useful_tools
+useful_tools: update useful_tools_helper
+
 .PHONY: all
-all: aliases update bash_helper zsh_helper fish_helper tmux_helper vim_helper
+all: aliases update bash_helper zsh_helper fish_helper tmux_helper vim_helper useful_tools_helper
 
 
 #################
@@ -33,7 +36,7 @@ all: aliases update bash_helper zsh_helper fish_helper tmux_helper vim_helper
 
 .PHONY: update
 update:
-	sudo apt-get update
+	sudo apt-get update --fix-missing
 
 
 .PHONY: bash_helper
@@ -91,6 +94,14 @@ vim_plugins:
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim || true
 	vim +PluginInstall +qall
 
+.PHONY: vim_setup
+vim_setup:
+	sudo apt-get install vim -y
+
 .PHONY: vim_helper
-vim_helper: vim_plugins vim_after vim_you_complete_me
+vim_helper: vim_setup vim_plugins vim_after vim_you_complete_me
 	@echo '*** vim setup ! ***'
+
+.PHONY: useful_tools_helper
+useful_tools_helper:
+	sudo ./helpers/install_useful_tools.sh

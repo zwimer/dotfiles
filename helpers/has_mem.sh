@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 mem=$(cat /proc/meminfo | grep MemTotal | awk '{ print $2 }')
 if [ $mem -le 2000000 ]; then
