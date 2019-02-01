@@ -19,6 +19,9 @@ fish: aliases update fish_helper
 .PHONY: tmux
 tmux: update tmux_helper
 
+.PHONY: gdb
+gdb: update gdb_helper
+
 .PHONY: vim
 vim: update vim_helper
 
@@ -26,7 +29,7 @@ vim: update vim_helper
 useful_tools: update useful_tools_helper
 
 .PHONY: all
-all: aliases update bash_helper zsh_helper fish_helper tmux_helper vim_helper useful_tools_helper
+all: aliases update bash_helper fish_helper tmux_helper gdb_helper zsh_helper vim_helper useful_tools_helper
 
 
 #################
@@ -73,6 +76,15 @@ tmux_helper:
 	@echo '*** tmux setup ! ***'
 
 
+.PHONY: gdb_helper
+gdb_helper:
+	sudo apt-get install gdb -y
+	git clone https://github.com/longld/peda.git ~/peda || true
+	mv ~/.gdbinit ~/.gdbinit.old || true
+	cp ./.gdbinit ~/.gdbinit
+	@echo '*** gdb setup ! ***'
+
+
 .PHONY: vim_you_complete_me
 vim_you_complete_me:
 	sudo apt-get install build-essential cmake -y
@@ -102,6 +114,8 @@ vim_setup:
 vim_helper: vim_setup vim_plugins vim_after vim_you_complete_me
 	@echo '*** vim setup ! ***'
 
+
 .PHONY: useful_tools_helper
 useful_tools_helper:
 	sudo ./helpers/install_useful_tools.sh
+	@echo '*** Useful tools setup ! ***'
