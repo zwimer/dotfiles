@@ -1,9 +1,6 @@
 #!/bin/bash -ex
 
 
-# Apt update
-apt-get update -y
-
 # Install packages
 apt-get install -y \
 	ipython parallel git make gcc g++ pandoc software-properties-common vim build-essential	\

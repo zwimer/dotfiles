@@ -33,15 +33,15 @@ gdb: update gdb_helper
 
 ##!    vim             : install and configure vim, install youcompleteme and other plugins
 .PHONY: vim
-vim: update vim_helper
+vim: has_mem update vim_helper
 
 ##!    useful_tools    : install a bunch of useful tools via apt-get
 .PHONY: useful_tools
 useful_tools: update useful_tools_helper
 
-##!    all             : do all of the above in order
+##!    all             : do all of the above in order, but do useful_tools first
 .PHONY: all
-all: aliases update bash_helper fish_helper zsh_helper tmux_helper gdb_helper vim_helper useful_tools_helper
+all: has_mem update useful_tools_helper aliases bash_helper fish_helper zsh_helper tmux_helper gdb_helper vim_helper
 
 ##!    help            : print this helpful message
 .PHONY: help
@@ -60,6 +60,9 @@ help:
 update:
 	sudo apt-get update --fix-missing
 
+.PHONY: has_mem
+has_mem:
+	./helpers/has_mem.sh
 
 .PHONY: bash_helper
 bash_helper:
@@ -109,7 +112,6 @@ vim_you_complete_me:
 	sudo apt-get install build-essential cmake -y
 	sudo apt-get install python-dev python3-dev -y
 	sudo apt-get install python-pip python-dev build-essential -y
-	./helpers/has_mem.sh
 	cd ~/.vim/bundle/YouCompleteMe && ./install.py --clang-completer
 
 .PHONY: vim_after
