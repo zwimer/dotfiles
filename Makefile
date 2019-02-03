@@ -39,9 +39,14 @@ vim: has_mem update vim_helper
 .PHONY: useful_tools
 useful_tools: update useful_tools_helper
 
+##!    all_no_upgrade  : do all of the above in order, but do useful_tools first. Does not run apt-get upgrade
+.PHONY: all_no_upgrade
+all_no_upgrade: has_mem update all_helper
+
+
 ##!    all             : do all of the above in order, but do useful_tools first
 .PHONY: all
-all: has_mem update useful_tools_helper aliases bash_helper fish_helper zsh_helper tmux_helper gdb_helper vim_helper
+all: has_mem update upgrade all_helper
 
 ##!    help            : print this helpful message
 .PHONY: help
@@ -60,9 +65,14 @@ help:
 update:
 	sudo apt-get update --fix-missing
 
+.PHONY: upgrade
+update:
+	sudo apt-get upgrade
+
 .PHONY: has_mem
 has_mem:
 	./helpers/has_mem.sh
+
 
 .PHONY: bash_helper
 bash_helper:
@@ -140,3 +150,7 @@ vim_helper: vim_setup vim_plugins vim_after vim_you_complete_me
 useful_tools_helper:
 	sudo ./helpers/install_useful_tools.sh
 	@echo '*** Useful tools setup ! ***'
+
+
+.PHONY: all_helper
+all_helper: useful_tools_helper aliases bash_helper fish_helper zsh_helper tmux_helper gdb_helper vim_helper
