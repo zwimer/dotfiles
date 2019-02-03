@@ -3,34 +3,53 @@
 ################
 
 
+# All lines starting with ##! shall be taken
+# as documentation for make help to interpret
+
+##!    aliases         : Copy's over aliases
 .PHONY: aliases
 aliases:
 	cp ./.shell_init ~/.shell_init
 
+##!    bash            : copy over bashrc
 .PHONY: bash
 bash: aliases bash_helper
 
-.PHONY: zsh
-zsh: aliases update zsh_helper
-
+##!    fish            : install and configure fish
 .PHONY: fish
 fish: aliases update fish_helper
 
+##!    zsh             : install zsh, oh-my-zsh, and plugins, and configure them
+.PHONY: zsh
+zsh: aliases update zsh_helper
+
+##!    tmux            : install and configure tmux
 .PHONY: tmux
 tmux: update tmux_helper
 
+##!    gdb             : install and configure gdb, install peda
 .PHONY: gdb
 gdb: update gdb_helper
 
+##!    vim             : install and configure vim, install youcompleteme and other plugins
 .PHONY: vim
 vim: update vim_helper
 
+##!    useful_tools    : install a bunch of useful tools via apt-get
 .PHONY: useful_tools
 useful_tools: update useful_tools_helper
 
+##!    all             : do all of the above in order
 .PHONY: all
-all: aliases update bash_helper fish_helper tmux_helper gdb_helper zsh_helper vim_helper useful_tools_helper
+all: aliases update bash_helper fish_helper zsh_helper tmux_helper gdb_helper vim_helper useful_tools_helper
 
+##!    help            : print this helpful message
+.PHONY: help
+help:
+	@echo ""
+	@echo "make options:"
+	@sed -n 's/^##!//p' < ./Makefile
+	@echo ""
 
 #################
 ###  PRIVATE  ###
