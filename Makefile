@@ -66,7 +66,7 @@ update:
 	sudo apt-get update --fix-missing
 
 .PHONY: upgrade
-update:
+upgrade:
 	sudo apt-get upgrade
 
 .PHONY: has_mem
