@@ -67,7 +67,7 @@ update:
 
 .PHONY: upgrade
 upgrade:
-	sudo apt-get upgrade
+	sudo apt-get upgrade -y
 
 .PHONY: has_mem
 has_mem:
