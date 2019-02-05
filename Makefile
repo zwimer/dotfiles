@@ -149,4 +149,4 @@ tools_helper:
 
 
 .PHONY: most_helper
-all_helper: aliases bash_helper fish_helper zsh_helper tmux_helper gdb_helper vim_helper
+most_helper: aliases bash_helper fish_helper zsh_helper tmux_helper gdb_helper vim_helper
