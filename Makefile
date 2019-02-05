@@ -45,7 +45,7 @@ most: prep most_helper
 
 ##!    all     : do all of the above in order, but do tools first
 .PHONY: all
-all: prep all_helper
+all: prep tools_helper most_helper
 
 ##!    help    : print this helpful message
 .PHONY: help
@@ -149,7 +149,3 @@ tools_helper:
 
 .PHONY: most_helper
 all_helper: aliases bash_helper fish_helper zsh_helper tmux_helper gdb_helper vim_helper
-
-
-.PHONY: all_helper
-all_helper: tools_helper most_helper
