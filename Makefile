@@ -90,8 +90,8 @@ zsh_helper:
 	DEBIAN_FRONTEND=noninteractive sudo apt-get install zsh -y
 	mv ~/.zshrc ~/.zshrc.old || true
 	cp ./.zshrc ~/.zshrc
-	./helpers/install_omz.sh
-	./helpers/install_omz_plugins.sh
+	./helpers/omz.sh
+	./helpers/omz_plugins.sh
 	@echo '*** zsh setup ! ***'
 
 
@@ -144,7 +144,7 @@ vim_helper: vim_setup vim_plugins vim_after vim_you_complete_me
 
 .PHONY: tools_helper
 tools_helper:
-	sudo ./helpers/install_useful_tools.sh
+	sudo ./helpers/useful_tools.sh
 	@echo '*** Tools setup ! ***'
 
 
