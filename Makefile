@@ -78,7 +78,7 @@ bash_helper:
 
 .PHONY: fish_helper
 fish_helper:
-	sudo apt-get install fish -y
+	DEBIAN_FRONTEND=noninteractive sudo apt-get install fish -y
 	mkdir -p ~/.config/fish/config.fish.old || true
 	mv ~/.config/fish/config.fish ~/.config/fish/config.fish.old || true
 	cp ./.config/fish/config.fish ~/.config/fish/config.fish
@@ -87,7 +87,7 @@ fish_helper:
 
 .PHONY: zsh_helper
 zsh_helper:
-	sudo apt-get install zsh -y
+	DEBIAN_FRONTEND=noninteractive sudo apt-get install zsh -y
 	mv ~/.zshrc ~/.zshrc.old || true
 	cp ./.zshrc ~/.zshrc
 	./helpers/install_omz.sh
@@ -97,7 +97,7 @@ zsh_helper:
 
 .PHONY: tmux_helper
 tmux_helper:
-	sudo apt-get install tmux -y
+	DEBIAN_FRONTEND=noninteractive sudo apt-get install tmux -y
 	mv ~/.tmux.conf ~/.tmux.conf.old || true
 	cp ./.tmux.conf ~/.tmux.conf
 	@echo '*** tmux setup ! ***'
@@ -105,7 +105,7 @@ tmux_helper:
 
 .PHONY: gdb_helper
 gdb_helper:
-	sudo apt-get install gdb -y
+	DEBIAN_FRONTEND=noninteractive sudo apt-get install gdb -y
 	git clone https://github.com/longld/peda.git ~/peda || true
 	mv ~/.gdbinit ~/.gdbinit.old || true
 	cp ./.gdbinit ~/.gdbinit
@@ -114,9 +114,8 @@ gdb_helper:
 
 .PHONY: vim_you_complete_me
 vim_you_complete_me:
-	sudo apt-get install build-essential cmake -y
-	sudo apt-get install python-dev python3-dev -y
-	sudo apt-get install python-pip python-dev build-essential -y
+	DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
+		build-essential cmake python-dev python3-dev python-pip
 	cd ~/.vim/bundle/YouCompleteMe && ./install.py --clang-completer
 
 .PHONY: vim_after
@@ -129,12 +128,14 @@ vim_after:
 vim_plugins:
 	mv ~/.vimrc ~/.vimrc.old || true
 	cp ./.vimrc ~/.vimrc
-	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim || true
+	git clone https://github.com/VundleVim/Vundle.vim.git \
+		~/.vim/bundle/Vundle.vim || true
 	vim +PluginInstall +qall
 
 .PHONY: vim_setup
 vim_setup:
-	sudo apt-get install vim latexmk texlive-latex-extra -y
+	DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
+		vim latexmk texlive-latex-extra
 
 .PHONY: vim_helper
 vim_helper: vim_setup vim_plugins vim_after vim_you_complete_me
