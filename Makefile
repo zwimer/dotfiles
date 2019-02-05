@@ -139,7 +139,7 @@ vim_plugins:
 
 .PHONY: vim_setup
 vim_setup:
-	sudo apt-get install vim -y
+	sudo apt-get install vim latexmk -y
 
 .PHONY: vim_helper
 vim_helper: vim_setup vim_plugins vim_after vim_you_complete_me

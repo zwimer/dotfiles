@@ -7,7 +7,7 @@ apt-get install -y \
 	fish zsh tmux python3-dev python-pip python-dev cmake libboost-all-dev doxygen gdb htop	\
 	vagrant python3-pip apt-transport-https ca-certificates ranger gnupg-agent rlwrap irssi \
 	cloc clang-format clang-tidy clang qt5-default wget manpages-dev manpages-posix-dev sed \
-	rsync curl
+	rsync curl latexmk
 
 # Peda
 (git clone https://github.com/longld/peda.git ~/peda && echo "source ~/peda/peda.py" >> ~/.gdbinit) || true
