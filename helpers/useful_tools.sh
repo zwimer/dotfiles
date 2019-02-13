@@ -22,5 +22,7 @@ add-apt-repository \
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install docker-ce docker-ce-cli containerd.io -y
 
-# Pwntools
+# Pip installs
+pip3 install ptipython
+pip install ptipython
 pip install pwntools
