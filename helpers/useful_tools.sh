@@ -7,8 +7,8 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
 	fish zsh tmux python3-dev python-pip python-dev cmake libboost-all-dev doxygen gdb htop	\
 	vagrant python3-pip apt-transport-https ca-certificates ranger gnupg-agent rlwrap irssi \
 	cloc clang-format clang-tidy clang qt5-default wget manpages-dev manpages-posix-dev sed \
-	rsync curl latexmk texlive-latex-extra texstudio asciinema socat screen comm unzip grep \
-	ipython3 moreutils zip
+	rsync curl latexmk texlive-latex-extra texstudio asciinema socat screen zip unzip grep \
+	ipython3 moreutils coreutils
 
 # Peda
 (git clone https://github.com/longld/peda.git ~/peda && echo "source ~/peda/peda.py" >> ~/.gdbinit) || true
