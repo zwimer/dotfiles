@@ -8,7 +8,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
 	vagrant python3-pip apt-transport-https ca-certificates ranger gnupg-agent rlwrap irssi \
 	cloc clang-format clang-tidy clang qt5-default wget manpages-dev manpages-posix-dev sed \
 	rsync curl latexmk texlive-latex-extra texstudio asciinema socat zip parallel unzip vim \
-	coreutils python-tk python3-tk parallel git screen
+	coreutils python-tk python3-tk parallel git screen gcc-multilib
 
 # Peda
 (git clone https://github.com/longld/peda.git ~/peda && echo "source ~/peda/peda.py" >> ~/.gdbinit) || true
