@@ -1,0 +1,3 @@
+FROM zwimer/dotfiles:base
+
+RUN cd dotfiles && make vim

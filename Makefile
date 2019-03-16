@@ -62,7 +62,7 @@ help:
 
 .PHONY: update
 update:
-	sudo apt-get update --fix-missing
+	sudo DEBIAN_FRONTEND=noninteractive apt-get update --fix-missing -q
 
 .PHONY: prep
 prep: update
@@ -78,7 +78,7 @@ bash_helper:
 
 .PHONY: fish_helper
 fish_helper:
-	DEBIAN_FRONTEND=noninteractive sudo apt-get install fish -y
+	sudo DEBIAN_FRONTEND=noninteractive apt-get install fish -yq
 	mkdir -p ~/.config/fish/config.fish.old || true
 	mv ~/.config/fish/config.fish ~/.config/fish/config.fish.old || true
 	cp ./.config/fish/config.fish ~/.config/fish/config.fish
@@ -87,7 +87,7 @@ fish_helper:
 
 .PHONY: zsh_helper
 zsh_helper:
-	DEBIAN_FRONTEND=noninteractive sudo apt-get install zsh -y
+	sudo DEBIAN_FRONTEND=noninteractive apt-get install zsh -yq
 	mv ~/.zshrc ~/.zshrc.old || true
 	cp ./.zshrc ~/.zshrc
 	./helpers/omz.sh
@@ -97,7 +97,7 @@ zsh_helper:
 
 .PHONY: tmux_helper
 tmux_helper:
-	DEBIAN_FRONTEND=noninteractive sudo apt-get install tmux -y
+	sudo DEBIAN_FRONTEND=noninteractive apt-get install tmux -yq
 	mv ~/.tmux.conf ~/.tmux.conf.old || true
 	cp ./.tmux.conf ~/.tmux.conf
 	@echo '*** tmux setup ! ***'
@@ -105,7 +105,7 @@ tmux_helper:
 
 .PHONY: gdb_helper
 gdb_helper:
-	DEBIAN_FRONTEND=noninteractive sudo apt-get install gdb -y
+	sudo DEBIAN_FRONTEND=noninteractive apt-get install gdb -yq
 	git clone https://github.com/longld/peda.git ~/peda || true
 	mv ~/.gdbinit ~/.gdbinit.old || true
 	cp ./.gdbinit ~/.gdbinit
@@ -114,7 +114,7 @@ gdb_helper:
 
 .PHONY: vim_you_complete_me
 vim_you_complete_me:
-	DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
+	sudo DEBIAN_FRONTEND=noninteractive apt-get install -yq \
 		build-essential cmake python-dev python3-dev python-pip
 	cd ~/.vim/bundle/YouCompleteMe && ./install.py --clang-completer
 
@@ -134,7 +134,7 @@ vim_plugins:
 
 .PHONY: vim_setup
 vim_setup:
-	DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
+	sudo DEBIAN_FRONTEND=noninteractive apt-get install -yq \
 		vim latexmk texlive-latex-extra
 
 .PHONY: vim_helper

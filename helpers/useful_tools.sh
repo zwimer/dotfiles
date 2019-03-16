@@ -2,7 +2,7 @@
 
 
 # Install packages
-DEBIAN_FRONTEND=noninteractive apt-get install -y \
+DEBIAN_FRONTEND=noninteractive apt-get install -yq \
 	moreutils make gcc g++ pandoc software-properties-common grep coreutils build-essential	\
 	fish zsh tmux python3-dev python-pip python-dev cmake libboost-all-dev doxygen gdb htop	\
 	vagrant python3-pip apt-transport-https ca-certificates ranger gnupg-agent rlwrap irssi \
@@ -19,7 +19,7 @@ add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
    $(lsb_release -cs) \
    stable"
-apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get update -q
 DEBIAN_FRONTEND=noninteractive apt-get install docker-ce docker-ce-cli containerd.io -y
 
 # Pip installs
