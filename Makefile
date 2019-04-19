@@ -23,6 +23,10 @@ fish: aliases update fish_helper
 .PHONY: zsh
 zsh: aliases update zsh_helper
 
+##!    git     : setup git aliases
+.PHONY: git
+git: git_helper
+
 ##!    tmux    : install and configure tmux
 .PHONY: tmux
 tmux: update tmux_helper
@@ -95,6 +99,12 @@ zsh_helper:
 	@echo '*** zsh setup ! ***'
 
 
+.PHONY: git_helper
+git_helper:
+	./helpers/setup_git.sh
+	@echo '*** git setup ! ***'
+
+
 .PHONY: tmux_helper
 tmux_helper:
 	sudo DEBIAN_FRONTEND=noninteractive apt-get install tmux -yq
@@ -149,4 +159,4 @@ tools_helper:
 
 
 .PHONY: most_helper
-most_helper: aliases bash_helper fish_helper zsh_helper tmux_helper gdb_helper vim_helper
+most_helper: aliases bash_helper fish_helper zsh_helper git_helper tmux_helper gdb_helper vim_helper

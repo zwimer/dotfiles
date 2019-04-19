@@ -11,10 +11,7 @@ export GT='https://www.github.com/zwimer/'
 # ------------------- General purpose -------------------
 
 # Git log alias
-alias gl='git log --graph --oneline --decorate --all'
-
-# Git status alias
-alias gis='git status'
+alias g='git'
 
 # Objdump default intel
 alias objdump='objdump -M intel'
@@ -33,23 +30,3 @@ alias g++='g++ -Wall -Wextra -std=c++11'
 
 # Allow gcc to default include comments
 alias gcc='gcc -Wall -Wextra'
-
-# ------------------ Computer specific ------------------
-
-# Matlab
-alias matlab='/Applications/MATLAB_R2015a.app/bin/matlab -nodesktop'
-
-# Path to qmake
-alias qmake='/Applications/Qt/5.7/clang_64/bin/qmake'
-
-# Allow purge to run without sudo
-alias purge='sudo purge'
-
-# Drracket
-alias drracket='/Applications/Racket\ v6.4/bin/drracket'
-
-# Commandline racket
-alias racket='/Applications/Racket\ v6.4/bin/racket'
-
-# Make java script easier
-alias js="/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Resources/jsc"
