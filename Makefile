@@ -145,7 +145,7 @@ vim_plugins:
 .PHONY: vim_setup
 vim_setup:
 	sudo DEBIAN_FRONTEND=noninteractive apt-get install -yq \
-		vim latexmk texlive-latex-extra
+		vim vim-gtk latexmk texlive-latex-extra
 
 .PHONY: vim_helper
 vim_helper: vim_setup vim_plugins vim_after vim_you_complete_me
