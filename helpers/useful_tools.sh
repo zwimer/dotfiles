@@ -23,5 +23,5 @@ DEBIAN_FRONTEND=noninteractive apt-get update -q
 DEBIAN_FRONTEND=noninteractive apt-get install docker-ce docker-ce-cli containerd.io -yq
 
 # Pip installs
-pip3 install ptipython ipython pwntools matplotlib tqdm
-pip install ptipython ipython pwntools matplotlib tqdm
+pip3 install ptipython ipython pwntools matplotlib tqdm fusepy
+pip install ptipython ipython pwntools matplotlib tqdm fusepy
