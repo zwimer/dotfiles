@@ -9,7 +9,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -yq \
 	cloc clang-format clang-tidy clang qt5-default wget manpages-dev manpages-posix-dev sed \
 	rsync curl latexmk texlive-latex-extra texstudio asciinema socat zip parallel unzip vim \
 	mosh python-tk python3-tk parallel git screen gcc-multilib vim-gtk virtualbox valgrind \
-	stress
+	stress graphviz
 
 # Peda
 (git clone https://github.com/longld/peda.git ~/peda && echo "source ~/peda/peda.py" >> ~/.gdbinit) || true
