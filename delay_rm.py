@@ -14,9 +14,12 @@ d_time = 900
 
 
 def print_log():
-    with open(log_f) as f:
-        outs = f.read()
-    outs += '\nlog file: ' + log_f
+    try:
+        with open(log_f) as f:
+            outs = f.read() + '\n'
+    except FileNotFoundError:
+        outs = ''
+    outs += 'log file: ' + log_f
     print(outs)
 
 def parse_args(args):
