@@ -13,10 +13,16 @@ log_f = '/tmp/delay_rm.log'
 d_time = 900
 
 
+def print_log():
+    with open(log_f) as f:
+        outs = f.read()
+    outs += '\nlog file: ' + log_f
+    print(outs)
+
 def parse_args(args):
     assert args, 'Error: no arguments'
     if args[0] == ('--log'):
-        print('log file: ' + log_f)
+        print_log()
         sys.exit(0)
     try:
         return unsafe_parse_args(args)
