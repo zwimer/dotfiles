@@ -30,3 +30,6 @@ alias g++='g++ -Wall -Wextra -std=c++11'
 
 # Allow gcc to default include comments
 alias gcc='gcc -Wall -Wextra'
+
+# rm delay
+alias rm='~/.local/bin/delay_rm.py'

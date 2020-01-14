@@ -10,6 +10,7 @@
 .PHONY: aliases
 aliases:
 	cp ./.shell_init ~/.shell_init
+	cp ./delay_rm.py ~/.local/bin/delay_rm.py
 
 ##!    bash    : copy over bashrc
 .PHONY: bash
