@@ -10,7 +10,8 @@
 .PHONY: aliases
 aliases:
 	cp ./.shell_init ~/.shell_init
-	cp ./delay_rm.py ~/.local/bin/delay_rm.py
+	git submodule init ./delayed_rm
+	sudo cp ./delayed_rm/delayed_rm.py ~/.local/bin/delayed_rm.py
 
 ##!    bash    : copy over bashrc
 .PHONY: bash

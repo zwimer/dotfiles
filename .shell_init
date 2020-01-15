@@ -32,4 +32,4 @@ alias g++='g++ -Wall -Wextra -std=c++11'
 alias gcc='gcc -Wall -Wextra'
 
 # rm delay
-alias rm='~/.local/bin/delay_rm.py'
+alias rm='~/.local/bin/delayed_rm.py'
