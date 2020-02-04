@@ -11,7 +11,7 @@
 aliases:
 	cp ./.shell_init ~/.shell_init
 	git submodule update --init ./delayed_rm
-	mkdir ~/.local/bin/ || true
+	mkdir -p ~/.local/bin/
 	sudo cp ./delayed_rm/delayed_rm.py ~/.local/bin/delayed_rm.py
 
 ##!    bash    : copy over bashrc
