@@ -6,13 +6,17 @@
 # All lines starting with ##! shall be taken
 # as documentation for make help to interpret
 
-##!    aliases : copy over aliases
-.PHONY: aliases
-aliases:
-	cp ./.shell_init ~/.shell_init
+##!    rm      : install's delayed_rm as rm
+.PHONY: rm
+rm:
 	git submodule update --init ./delayed_rm
 	mkdir -p ~/.local/bin/
 	sudo cp ./delayed_rm/delayed_rm.py ~/.local/bin/delayed_rm.py
+
+##!    aliases : copy over aliases
+.PHONY: aliases
+aliases: rm
+	cp ./.shell_init ~/.shell_init
 
 ##!    bash    : copy over bashrc
 .PHONY: bash
