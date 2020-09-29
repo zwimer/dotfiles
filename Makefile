@@ -132,7 +132,7 @@ gdb_helper:
 .PHONY: vim_you_complete_me
 vim_you_complete_me:
 	sudo DEBIAN_FRONTEND=noninteractive apt-get install -yq \
-		build-essential cmake python-dev python3-dev python-pip
+		build-essential cmake python3-dev python3-pip
 	cd ~/.vim/bundle/YouCompleteMe && ./install.py --clang-completer
 
 .PHONY: vim_after

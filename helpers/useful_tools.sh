@@ -4,7 +4,7 @@
 # Install packages
 DEBIAN_FRONTEND=noninteractive apt-get install -yq \
 	moreutils make gcc g++ pandoc software-properties-common grep coreutils build-essential	\
-	fish zsh tmux python3-dev python-pip python-dev cmake libboost-all-dev doxygen gdb htop	\
+	fish zsh tmux python3-dev python3-pip cmake libboost-all-dev doxygen gdb htop	\
 	vagrant python3-pip apt-transport-https ca-certificates ranger gnupg-agent rlwrap irssi \
 	cloc clang-format clang-tidy clang qt5-default wget manpages-dev manpages-posix-dev sed \
 	rsync curl latexmk texlive-latex-extra texstudio asciinema socat zip parallel unzip vim \
@@ -25,4 +25,3 @@ DEBIAN_FRONTEND=noninteractive apt-get install docker-ce docker-ce-cli container
 
 # Pip installs
 pip3 install ptipython ipython pwntools matplotlib tqdm fusepy exodus-bundler
-pip install ptipython ipython pwntools matplotlib tqdm fusepy exodus-bundler
