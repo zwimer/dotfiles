@@ -68,15 +68,20 @@ set backspace=indent,eol,start
 " Allow the mouse to be used for everything
 set mouse=a
 
-" Map l to @q and ; to @w
+" Map l to @q
 nnoremap l @q
-nnoremap ; @w
 
 " Remap U to u
 nnoremap U u
 
+" Remap shift up to up
+vnoremap <S-Up> <Up>
+
+" Remap shift down to down
+vnoremap <S-Down> <Down>
+
 " Allow many tabs
-set tabpagemax=50
+set tabpagemax=500
 
 " Allow pasting
 set paste
