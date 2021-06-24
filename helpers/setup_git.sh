@@ -60,5 +60,8 @@ git config --global alias.r "rebase"
 git config --global alias.ri "rebase -i"
 git config --global alias.rc "rebase --continue"
 
+# Undo
+git config --global alias.undo "reset head@{0}"
+
 # Help
 git config --global alias.aliases "config --get-regexp '^alias\.'"
