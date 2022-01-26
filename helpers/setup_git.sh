@@ -32,6 +32,7 @@ git config --global alias.cae "commit --amend"
 
 # Push
 git config --global alias.ps "push"
+git config --global alias.pushhard "push --force-with-lease"
 git config --global alias.yolo "push --force"
 git config --global alias.upstream "push --set-upstream origin master"
 
