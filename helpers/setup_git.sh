@@ -10,9 +10,13 @@ git config --global core.editor "/usr/bin/vim"
 # Push
 git config --global push.default simple
 
+# Pull
+git config --global pull.rebase true
+
 # Color
 git config --global color.ui auto
 git config --global color.decorate.tag blue
+git config --global diff.colorMoved zebra
 
 # Credential
 git config --global credential.helper store

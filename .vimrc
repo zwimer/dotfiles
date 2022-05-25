@@ -1,6 +1,9 @@
 set shell=/bin/bash
 " Define shell
 
+" Define encoding
+set encoding=utf-8
+
 " Set the tex flavor
 let g:tex_flavor = 'tex'
 
@@ -136,3 +139,18 @@ set noerrorbells visualbell t_vb=
 if has('autocmd')
 	autocmd GUIEnter * set visualbell t_vb=
 endif
+
+function! DisplayColorSchemes()
+   let currDir = getcwd()
+   exec "cd $VIMRUNTIME/colors"
+   for myCol in split(glob("*"), '\n')
+      if myCol =~ '\.vim'
+         let mycol = substitute(myCol, '\.vim', '', '')
+         exec "colorscheme " . mycol
+         exec "redraw!"
+         echo "colorscheme = ". myCol
+         sleep 2
+      endif
+   endfor
+   exec "cd " . currDir
+endfunction

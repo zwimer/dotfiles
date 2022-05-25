@@ -51,7 +51,8 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(vagrant python pip sudo history-substring-search zsh-autosuggestions zsh-syntax-highlighting)
+export ZSH_AUTOSUGGEST_USE_ASYNC=1
+plugins=(sudo history-substring-search zsh-autosuggestions zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -89,5 +90,3 @@ ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=213'
 
 # Aliases
 source ~/.shell_init
-
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"

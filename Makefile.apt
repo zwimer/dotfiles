@@ -11,7 +11,7 @@
 rm:
 	git submodule update --init ./delayed_rm
 	mkdir -p ~/.local/bin/
-	sudo cp ./delayed_rm/delayed_rm.py ~/.local/bin/delayed_rm.py
+	sudo --preserve-env=DEBIAN_FRONTEND cp ./delayed_rm/delayed_rm.py ~/.local/bin/delayed_rm.py
 
 ##!    aliases : copy over aliases
 .PHONY: aliases
@@ -21,10 +21,6 @@ aliases: rm
 ##!    bash    : copy over bashrc
 .PHONY: bash
 bash: aliases bash_helper
-
-##!    fish    : install and configure fish
-.PHONY: fish
-fish: aliases update fish_helper
 
 ##!    zsh     : install zsh, oh-my-zsh, and plugins, and configure them
 .PHONY: zsh
@@ -46,24 +42,16 @@ gdb: update gdb_helper
 .PHONY: vim
 vim: prep vim_helper
 
-##!    tools   : install a bunch of tools via apt-get
-.PHONY: tools
-tools: update tools_helper
-
-##!    most    : make everything except tools
-.PHONY: most
-most: prep most_helper
-
 ##!    all     : do all of the above in order, but do tools first
 .PHONY: all
-all: prep tools_helper most_helper
+all: prep all_helper
 
 ##!    help    : print this helpful message
 .PHONY: help
 help:
 	@echo ""
 	@echo "make options:"
-	@sed -n 's/^##!//p' < ./Makefile
+	@sed -n 's/^##!//p' < ./Makefile.apt
 	@echo ""
 
 #################
@@ -73,7 +61,7 @@ help:
 
 .PHONY: update
 update:
-	sudo DEBIAN_FRONTEND=noninteractive apt-get update --fix-missing -q
+	sudo --preserve-env=DEBIAN_FRONTEND apt-get update --fix-missing -q
 
 .PHONY: prep
 prep: update
@@ -87,18 +75,9 @@ bash_helper:
 	@echo '*** bash setup ! ***'
 
 
-.PHONY: fish_helper
-fish_helper:
-	sudo DEBIAN_FRONTEND=noninteractive apt-get install fish -yq
-	mkdir -p ~/.config/fish/config.fish.old || true
-	mv ~/.config/fish/config.fish ~/.config/fish/config.fish.old || true
-	cp ./.config/fish/config.fish ~/.config/fish/config.fish
-	@echo '*** fish setup ! ***'
-
-
 .PHONY: zsh_helper
 zsh_helper:
-	sudo DEBIAN_FRONTEND=noninteractive apt-get install zsh -yq
+	sudo --preserve-env=DEBIAN_FRONTEND apt-get install zsh -yq
 	mv ~/.zshrc ~/.zshrc.old || true
 	cp ./.zshrc ~/.zshrc
 	./helpers/omz.sh
@@ -114,7 +93,7 @@ git_helper:
 
 .PHONY: tmux_helper
 tmux_helper:
-	sudo DEBIAN_FRONTEND=noninteractive apt-get install tmux -yq
+	sudo --preserve-env=DEBIAN_FRONTEND apt-get install tmux -yq
 	mv ~/.tmux.conf ~/.tmux.conf.old || true
 	cp ./.tmux.conf ~/.tmux.conf
 	@echo '*** tmux setup ! ***'
@@ -122,8 +101,8 @@ tmux_helper:
 
 .PHONY: gdb_helper
 gdb_helper:
-	sudo DEBIAN_FRONTEND=noninteractive apt-get install gdb -yq
-	git clone https://github.com/longld/peda.git ~/peda || true
+	sudo --preserve-env=DEBIAN_FRONTEND apt-get install gdb -yq
+	git clone https://github.com/longld/peda.git ~/.peda || true
 	mv ~/.gdbinit ~/.gdbinit.old || true
 	cp ./.gdbinit ~/.gdbinit
 	@echo '*** gdb setup ! ***'
@@ -131,7 +110,7 @@ gdb_helper:
 
 .PHONY: vim_you_complete_me
 vim_you_complete_me:
-	sudo DEBIAN_FRONTEND=noninteractive apt-get install -yq \
+	sudo --preserve-env=DEBIAN_FRONTEND apt-get install -yq \
 		build-essential cmake python3-dev python3-pip
 	cd ~/.vim/bundle/YouCompleteMe && ./install.py --clang-completer
 
@@ -151,7 +130,7 @@ vim_plugins:
 
 .PHONY: vim_setup
 vim_setup:
-	sudo DEBIAN_FRONTEND=noninteractive apt-get install -yq \
+	sudo --preserve-env=DEBIAN_FRONTEND apt-get install -yq \
 		vim vim-gtk latexmk texlive-latex-extra
 
 .PHONY: vim_helper
@@ -159,11 +138,5 @@ vim_helper: vim_setup vim_plugins vim_after vim_you_complete_me
 	@echo '*** vim setup ! ***'
 
 
-.PHONY: tools_helper
-tools_helper:
-	sudo ./helpers/useful_tools.sh
-	@echo '*** Tools setup ! ***'
-
-
-.PHONY: most_helper
-most_helper: aliases bash_helper fish_helper zsh_helper git_helper tmux_helper gdb_helper vim_helper
+.PHONY: all_helper
+all_helper: aliases bash_helper zsh_helper git_helper tmux_helper gdb_helper vim_helper

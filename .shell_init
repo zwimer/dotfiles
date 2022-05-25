@@ -10,26 +10,24 @@ export GT='https://www.github.com/zwimer/'
 
 # ------------------- General purpose -------------------
 
-# Git log alias
-alias g='git'
-
-# Objdump default intel
-alias objdump='objdump -M intel'
-
-# vim
-alias vim='vim -p'
-
-# ls -la
-alias la='ls -lAG'
-
-# Octave
-alias octave='octave --no-gui'
-
-# Allow g++ to default to c++ 11 with comments
+# Default flags
 alias g++='g++ -Wall -Wextra -std=c++11'
-
-# Allow gcc to default include comments
 alias gcc='gcc -Wall -Wextra'
+alias objdump='objdump -M intel'
+alias octave='octave --no-gui'
+alias cling='cling --std=c++17'
+alias vim='vim -p'
+alias mv='mv -i'
+alias cp='cp -i'
+
+# New commands
+alias g='git'
+alias la='ls -lAG'
+alias untar='tar -xvf'
+
+# Search
+alias search='find . | grep -i'
+function search2() { (set -u; grep -irl "${1}" .); }
 
 # rm delay
 alias rm='~/.local/bin/delayed_rm.py'
