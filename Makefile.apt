@@ -42,7 +42,7 @@ gdb: update gdb_helper
 .PHONY: vim
 vim: prep vim_helper
 
-##!    all     : do all of the above in order, but do tools first
+##!    all     : do all of the above in order
 .PHONY: all
 all: prep all_helper
 
