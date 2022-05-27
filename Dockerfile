@@ -1,24 +1,19 @@
 ARG DISTRO=fedora
+FROM "${DISTRO}" as base
 
-# Base images
 
-FROM ubuntu:22.04 as ubuntu_base
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get upgrade -yq
-RUN apt-get install -yq git make sudo
-ENV MAKEF="Makefile.apt"
-
-FROM fedora:36 as fedora_base
-RUN dnf upgrade -yq
-RUN dnf install -yq git make sudo
-ENV MAKEF="Makefile.dnf"
-
-# Images
-
-FROM ${DISTRO}_base as setup
-COPY . /dotfiles
 WORKDIR /dotfiles
+COPY ./scripts ./scripts
 
-FROM setup as test
+RUN ./scripts/prep_install.sh
+RUN ./scripts/install.sh git make sudo curl
+RUN ./scripts/install_if.sh dnf yum which
+
+COPY ./.gitmodules ./.gitmodules
+COPY ./delayed_rm ./delayed_rm
+COPY ./Makefile ./Makefile
+COPY ./conf ./conf
+COPY ./.git ./.git
+
 ARG TARGET=all
-RUN make -f "${MAKEF}" "${TARGET}"
+RUN make "${TARGET}"

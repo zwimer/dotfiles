@@ -1,25 +1,21 @@
-#!/bin/sh -ex
+#!/bin/sh -eux
 
 # User
 git config --global user.name zwimer
 git config --global user.email zwimer@gmail.com
 
 # Core
-git config --global core.editor "/usr/bin/vim"
+git config --global core.excludesfile ~/.gitignore
 
-# Push
+# Behavior
 git config --global push.default simple
-
-# Pull
 git config --global pull.rebase true
+git config --global credential.helper store
 
 # Color
 git config --global color.ui auto
 git config --global color.decorate.tag blue
 git config --global diff.colorMoved zebra
-
-# Credential
-git config --global credential.helper store
 
 # Aliases
 

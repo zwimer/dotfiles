@@ -2,11 +2,9 @@
 
 # -------------------- Exports --------------------
 
-# Set ls colors
-export LSCOLORS=ExFxCxDxBxegedabagacad
-
-# My github
+export LSCOLORS="ExFxCxDxBxegedabagacad"
 export GT='https://www.github.com/zwimer/'
+export LANG='en_US.UTF-8'
 
 # ------------------- General purpose -------------------
 
@@ -28,6 +26,3 @@ alias untar='tar -xvf'
 # Search
 alias search='find . | grep -i'
 function search2() { (set -u; grep -irl "${1}" .); }
-
-# rm delay
-alias rm='~/.local/bin/delayed_rm.py'

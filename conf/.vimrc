@@ -21,17 +21,10 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Plugins
-Plugin 'lervag/vimtex'						" Latex
-Plugin 'Valloric/YouCompleteMe'				" Autocomplete
-Plugin 'airblade/vim-gitgutter'				" Git status of lines
-Plugin 'tpope/vim-commentary'				" Commenting via gcc
-Plugin 'bogado/file-line'					" Run vim A:B to open file a at line B
-Plugin 'ntpeters/vim-better-whitespace'		" Handles trailing whitespace (trim on save also)
-" Plugin 'tpope/vim-surround'				" Change surrounding characters
-" Plugin 'chrisbra/csv'						" csv's work better (requires config!)
-" Plugin 'godlygeek/tabular'				" Align items with tabs at a character
-" Plugin 'nathanaelkane/vim-indent-guides'	" Indent guits
-" Plugin 'vim-scripts/haskell'				" Haskell
+" Plugin 'Valloric/YouCompleteMe'         " Autocomplete
+Plugin 'tpope/vim-commentary'           " Commenting via gcc
+Plugin 'airblade/vim-gitgutter'         " Git status of lines
+Plugin 'ntpeters/vim-better-whitespace' " Trim trailing whitespace
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required

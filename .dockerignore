@@ -1,2 +1,3 @@
-*.swp
-*.swo
+Dockerfile
+**/*.swp
+**/*.swo
