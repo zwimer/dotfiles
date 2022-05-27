@@ -1,19 +1,19 @@
-#!/bin/bash -eu
+#!/bin/bash -u
 
 # virtualenvwrapper.sh is sometimes installed here
 VEW="$(which virtualenvwrapper.sh)"
 OPT="/usr/share/virtualenvwrapper/virtualenvwrapper.sh"
-if [[ -f "${OPT}" ]]; then
+if [[ -f "${OPT}" ]];
+then
 	VEW="${OPT}"
-elif [[ -z "${VEW}" ]]; then
+elif [[ -z "${VEW}" ]];
+then
 	echo "Cannot find virtualenvwrapper.sh"
 	exit 1
-then
-
 fi
-export PATH="${PATH}:/usr/share/virtualenvwrapper"
 
 
+set -e
 cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 set -x
 ./append_str.sh "# Configuration for virtualenv" ~/.shell_init
