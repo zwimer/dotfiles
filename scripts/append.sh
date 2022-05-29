@@ -1,17 +1,27 @@
 #!/bin/bash -eux
 
 # Args
-ADD="${1}"
-ADD_TO="${2}"
-PREFIX="${3-}"
+MODE="${1}"
+DATA="${2}"
+ADD_TO="${3}"
+OPTIONAL_PREFIX="${4-}"
 
-# Append
-if [[ ! -f "${ADD_TO}" ]];
-then
-	cat << EOF >> "${ADD_TO}"
+function prefix() {
+	if [[ ! -f "${ADD_TO}" ]];
+	then
+		echo '' >> "${ADD_TO}"
+		echo "${OPTIONAL_PREFIX}############################################################" >> "${ADD_TO}"
+		echo '' >> "${ADD_TO}"
+	fi
+}
 
-${PREFIX}############################################################
-
-EOF
+if [[ "${MODE}" == "str" ]]; then
+	prefix
+	echo "${DATA}" >> "${ADD_TO}"
+elif [[ "${MODE}" == "file" ]]; then
+	prefix
+	cat "${DATA}" >> "${ADD_TO}"
+else
+	>&2 echo "Unsupported mode ${MODE}"
+	exit 1
 fi
-cat "${ADD}" >> "${ADD_TO}"

@@ -10,5 +10,5 @@ fi
 
 cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 set -x
-./append_str.sh "export EDITOR='${VIM}'" ~/.shell_init
+./append.sh str "export EDITOR='${VIM}'" ~/.shell_init
 git config --global core.editor "${VIM}"

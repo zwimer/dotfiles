@@ -8,8 +8,7 @@ if [[ "${MEM}" -le 2000000 ]]; then
 	exit 1
 fi
 
-grep "\" Plugin 'Valloric/YouCompleteMe'" ~/.vimrc >/dev/null 2>/dev/null
-if [[ "$?" -ne 0 ]]; then
+if ! grep "\" Plugin 'Valloric/YouCompleteMe'" ~/.vimrc >/dev/null 2>/dev/null; then
 	echo ""
 	echo "*** Please add the following line to your .vimrc in the plugin section ***"
 	echo "\" Plugin 'Valloric/YouCompleteMe'"
