@@ -1,19 +1,14 @@
 ARG DISTRO=fedora
 FROM "${DISTRO}" as base
 
+# Install dependencies (we use pkg for ease but manual is fine too)
+COPY ./scripts/pkg.sh /bin/pkg
+RUN pkg install git make sudo curl
+RUN pkg install_if2 dnf yum which
 
+# Copy over required items
+COPY . /dotfiles
 WORKDIR /dotfiles
-COPY ./scripts ./scripts
-
-RUN ./scripts/pkg.sh init
-RUN ./scripts/pkg.sh install git make sudo curl
-RUN ./scripts/pkg.sh install_if2 dnf yum which
-
-COPY ./.gitmodules ./.gitmodules
-COPY ./delayed_rm ./delayed_rm
-COPY ./Makefile ./Makefile
-COPY ./conf ./conf
-COPY ./.git ./.git
 
 ARG TARGET=all
 RUN make "${TARGET}"

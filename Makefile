@@ -23,7 +23,13 @@ rm: shell
 
 ##!    zsh     : install zsh, oh-my-zsh, and plugins, and configure them
 .PHONY: zsh
-zsh: init_pkg zsh_helper
+zsh: shell
+	./scripts/pkg.sh install zsh
+	./scripts/append.sh file ./conf/.zshrc ~/.zshrc
+	./scripts/omz.sh
+	./scripts/omz_plugins.sh
+	@echo '*** zsh setup ! ***'
+	@echo '*** You may want to run chsh -s `which zsh` ***'
 
 ##!    git     : setup git aliases
 .PHONY: git
@@ -35,31 +41,48 @@ git:
 
 ##!    tmux    : install and configure tmux
 .PHONY: tmux
-tmux: init_pkg tmux_helper
+tmux:
+	./scripts/pkg.sh install tmux
+	./scripts/append.sh file ./conf/.tmux.conf ~/.tmux.conf
+	@echo '*** tmux setup ! ***'
 
 ##!    gdb     : install and configure gdb, install peda
 .PHONY: gdb
-gdb: init_pkg gdb_helper
+gdb:
+	./scripts/pkg.sh install gdb
+	git clone https://github.com/longld/peda.git ~/.peda || true
+	./scripts/append.sh file ./conf/.gdbinit ~/.gdbinit
+	@echo '*** gdb setup ! ***'
 
 ##!    python  : install python, pip, virtualenvwrapper, and edit .shell_init
 .PHONY: python
-python: init_pkg python_helper
+python: shell
+	./scripts/pkg.sh install_if2 apt apt-get python3-pip virtualenvwrapper
+	./scripts/pkg.sh install_if2 dnf yum     python3-pip python3-virtualenvwrapper
+	./scripts/py_exports.sh
 
 ##!    vim     : install and configure vim and plugins
 .PHONY: vim
-vim: init_pkg vim_helper
+vim: vim_setup vim_plugins vim_after
+	@echo '*** vim setup ! ***'
 
 ##!    most    : do all of the above in order
 .PHONY: most
-most: shell rm init_pkg zsh_helper git tmux_helper gdb_helper python_helper vim_helper
+most: shell rm zsh git tmux gdb python vim
 
 ##!    vim_ycm : install the vim plugin YouCompleteMe
 .PHONY: vim_ycm
-vim_ycm: init_pkg vim_ycm_helper
+vim_ycm: vim_ycm_check vim python
+	./scripts/pkg.sh install_if2 apt apt-get cmake python3-dev   build-essential
+	./scripts/pkg.sh install_if2 dnf yum     cmake python3-devel gcc-c++ make
+	sed -i "s|\" Plugin 'Valloric/YouCompleteMe'| Plugin 'Valloric/YouCompleteMe'|g" ~/.vimrc
+	vim +PluginInstall +qall
+	cd ~/.vim/bundle/YouCompleteMe && ./install.py --clang-completer
+	@echo '*** YouCompleteMe setup ! ***'
 
 ##!    all     : do all of the above in order
 .PHONY: all
-all: most vim_ycm_helper
+all: most vim_ycm
 
 ##!    help    : print this helpful message
 .PHONY: help
@@ -72,43 +95,6 @@ help:
 #################
 ###  PRIVATE  ###
 #################
-
-
-.PHONY: init_pkg
-init_pkg:
-	./scripts/pkg.sh init
-
-
-.PHONY: zsh_helper
-zsh_helper: shell
-	./scripts/pkg.sh install zsh
-	./scripts/append.sh file ./conf/.zshrc ~/.zshrc
-	./scripts/omz.sh
-	./scripts/omz_plugins.sh
-	@echo '*** zsh setup ! ***'
-	@echo '*** You may want to run chsh -s `which zsh` ***'
-
-
-.PHONY: tmux_helper
-tmux_helper:
-	./scripts/pkg.sh install tmux
-	./scripts/append.sh file ./conf/.tmux.conf ~/.tmux.conf
-	@echo '*** tmux setup ! ***'
-
-
-.PHONY: gdb_helper
-gdb_helper:
-	./scripts/pkg.sh install gdb
-	git clone https://github.com/longld/peda.git ~/.peda || true
-	./scripts/append.sh file ./conf/.gdbinit ~/.gdbinit
-	@echo '*** gdb setup ! ***'
-
-
-.PHONY: python_helper
-python_helper: shell
-	./scripts/pkg.sh install_if2 apt apt-get python3-pip virtualenvwrapper
-	./scripts/pkg.sh install_if2 dnf yum     python3-pip python3-virtualenvwrapper
-	./scripts/py_exports.sh
 
 
 .PHONY: vim_after
@@ -129,20 +115,7 @@ vim_setup: shell
 	./scripts/pkg.sh install_if2 dnf yum vim-default-editor
 	./scripts/default_vim.sh
 
-.PHONY: vim_helper
-vim_helper: vim_setup vim_plugins vim_after
-	@echo '*** vim setup ! ***'
-
 
 .PHONY: vim_ycm_check
 vim_ycm_check:
 	./scripts/vim_ycm_chk.sh
-
-.PHONY: vim_ycm_helper
-vim_ycm_helper: vim_ycm_check vim python
-	./scripts/pkg.sh install_if2 apt apt-get cmake python3-dev   build-essential
-	./scripts/pkg.sh install_if2 dnf yum     cmake python3-devel gcc-c++ make
-	sed -i "s|\" Plugin 'Valloric/YouCompleteMe'| Plugin 'Valloric/YouCompleteMe'|g" ~/.vimrc
-	vim +PluginInstall +qall
-	cd ~/.vim/bundle/YouCompleteMe && ./install.py --clang-completer
-	@echo '*** YouCompleteMe setup ! ***'

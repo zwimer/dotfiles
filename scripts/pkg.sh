@@ -45,14 +45,6 @@ function find_pm() {
 	[[ -n "${PM:-}" ]] || err "Could not find any package manager."
 }
 
-# Init package manager
-function init() {
-	find_pm
-	if [[ "${PM}" == apt || "${PM}" == apt-get ]]; then
-		root_do "${PM}" update --fix-missing -q;
-	fi
-}
-
 # Install the passed packages
 function install() {
 	find_pm
@@ -64,6 +56,13 @@ function install_helper() {
 	if ! is_in "${PM}" "${SUPPORTED[@]}"; then
 		err "*** Error: no suitable package manager found. ***"
 	fi
+	# Metadata refresh if needed
+	if [[ "${PM}" == apt || "${PM}" == apt-get ]]; then
+		if [[ "$(find /var/lib/apt/lists -type f | wc -l)" -eq 0 ]]; then
+			root_do "${PM}" update --fix-missing -q;
+		fi
+	fi
+	# Install
 	root_do "${PM}" install -yq "$@"
 }
 
@@ -85,7 +84,7 @@ function install_if2() {
 CMD="${1}"
 shift
 
-SUPPORTED=("help" "root_do" "init" "install" "install_if2")
+SUPPORTED=("help" "root_do" "install" "install_if2")
 if ! is_in "${CMD}" "${SUPPORTED[@]}"; then err "Unknown command ${CMD}"; fi
 
 "${CMD}" "${@}"
