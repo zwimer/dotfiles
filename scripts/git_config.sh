@@ -1,10 +1,12 @@
 #!/bin/sh -eux
 
+
 # User
 git config --global user.name zwimer
 git config --global user.email zwimer@gmail.com
 
 # Core
+touch ~/.gitignore
 git config --global core.excludesfile ~/.gitignore
 
 # Behavior

@@ -1,10 +1,13 @@
-#!/bin/bash -eux
+#!/bin/bash -eu
 
-export CHSH=no
-export RUNZSH=no
-export KEEP_ZSHRC=yes
-
-set +x
 URL="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
 echo "Running ${URL}"
-sh -c "$(curl "${URL}")"
+CHSH=no RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl "${URL}")"
+
+PDIR="${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins"
+mkdir -p "${PDIR}"
+cd "${PDIR}"
+
+# These are custom plugins we noted in our .zshrc, we install them now
+git clone "https://github.com/zsh-users/zsh-syntax-highlighting"
+git clone "https://github.com/zsh-users/zsh-autosuggestions"
