@@ -4,13 +4,13 @@
 MODE="${1}"
 DATA="${2}"
 ADD_TO="${3}"
-OPTIONAL_PREFIX="${4-}"
+PREFIX="${4-#}"
 
 function prefix() {
-	if [[ ! -f "${ADD_TO}" ]];
+	if [[ -f "${ADD_TO}" ]];
 	then
 		echo '' >> "${ADD_TO}"
-		echo "${OPTIONAL_PREFIX}############################################################" >> "${ADD_TO}"
+		echo "${PREFIX} -------------------- Appended --------------------" >> "${ADD_TO}"
 		echo '' >> "${ADD_TO}"
 	fi
 }
