@@ -2,7 +2,7 @@
 
 
 # Find vim
-VIM="$(which vim)"
+VIM="$(which vim || true)"
 if [[ -z "${VIM}" ]];
 then
 	>&2 echo "Error: Cannot find vim"

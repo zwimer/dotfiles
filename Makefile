@@ -60,8 +60,7 @@ vim: shell
 	./scripts/pkg.sh install vim
 	./scripts/default_vim.sh
 	./scripts/append.sh file ./conf/.vimrc ~/.vimrc '" '
-	git clone https://github.com/VundleVim/Vundle.vim.git \
-		~/.vim/bundle/Vundle.vim || true
+	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim || true
 	vim +PluginInstall +qall
 	mkdir -p ~/.vim/after/
 	./scripts/append.sh file ./conf/gutter.vim ~/.vim/after/gutter.vim '" '
