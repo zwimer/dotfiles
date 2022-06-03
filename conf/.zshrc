@@ -84,3 +84,6 @@ ZSH_HIGHLIGHT_STYLES[command]='fg=26'
 ZSH_HIGHLIGHT_STYLES[arg0]='fg=26'
 ZSH_HIGHLIGHT_STYLES[redirection]='fg=213'
 ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=213'
+
+# When unpushed commits exist, make it obvious
+export ZSH_THEME_GIT_PROMPT_AHEAD="%{$BLUE%}(↑)"
