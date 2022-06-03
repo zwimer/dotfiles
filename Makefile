@@ -44,6 +44,9 @@ git:
 tmux:
 	./scripts/pkg.sh install tmux
 	./scripts/append.sh file ./conf/.tmux.conf ~/.tmux.conf
+	git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm || true
+	~/.tmux/plugins/tpm/scripts/install_plugins.sh
+	./scripts/pkg.sh install_if2 dnf yum sysstat # For a tmux plugin
 	@echo '*** tmux setup ! ***'
 
 ##!    gdb     : install and configure gdb, install peda
