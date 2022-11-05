@@ -1,8 +1,21 @@
-# -------------------- Exports --------------------
+if [ -z "${TMUX}" ]  && [ -n "${SSH_CONNECTION}" ]; then
+    tmux attach -t default || tmux new -s default
+fi
 
-export LSCOLORS="ExFxCxDxBxegedabagacad"
+# ------------------- Exports -------------------
+
+# General
 export GT='https://www.github.com/zwimer/'
 export LANG='en_US.UTF-8'
+
+# History
+export HISTSIZE=10000000
+export SAVEHIST=10000000
+
+# App config
+export FFSEND_HOST='https://send.zwimer.com/'
+export LSCOLORS='ExFxCxDxBxegedabagacad'
+export DOCKER_SCAN_SUGGEST=false
 
 # ------------------- General purpose -------------------
 
@@ -20,7 +33,77 @@ alias cp='cp -i'
 alias g='git'
 alias la='ls -lAG'
 alias untar='tar -xvf'
+function myhost() { cat /etc/hosts | grep -i "$1"; }
+
+# Quote
+if [ command -v quote &> /dev/null]]; then
+	alias qargs='quote | xargs -o '
+	alias qargsJ='quote | xargs -oJ {} '
+fi
 
 # Search
 alias search='find . | grep -i'
 function search2() { (set -u; grep -irl "${1}" .); }
+
+# Avoid accidents
+function pip() {
+	if [[ -z "${VIRTUAL_ENV}" && "$#" -ge 1 && "$1" == "install" ]]; then
+		echo "Error: Do not use pip outside of a virtualenv"
+		return 1
+	else
+		\pip3 "${@}"
+	fi
+}
+alias pip3=pip
+
+# ------------------- OS Specific -------------------
+
+if [[ "${OSTYPE}" == 'darwin'* ]]; then
+
+	# Fixers
+	alias fix-audio="ps aux | grep 'coreaudio[d]' | awk '{print \$2}' | xargs sudo kill"
+	alias fix-sudo="sudo gsed -i '2 i auth       sufficient     pam_tid.so' /etc/pam.d/sudo"
+	alias fix-zt='sudo bash -c "launchctl unload /Library/LaunchDaemons/com.zerotier.one.plist; launchctl load /Library/LaunchDaemons/com.zerotier.one.plist"'
+
+	# Switches
+	alias crashreport-on="sudo defaults write com.apple.CrashReporter DialogType crashreport"
+	alias crashreport-off="sudo defaults write com.apple.CrashReporter DialogType none"
+
+	# Linux-ish
+	function ldd() { otool -L "${1}"; }
+	function ip() { ifconfig | grep inet | grep -v '::' | awk '{print $2}'; }
+	alias google-chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
+	alias python=python3
+
+	# Brew
+	export HOMEBREW_NO_ANALYTICS=1
+	eval "$(/opt/homebrew/bin/brew shellenv)"
+
+	# Docker
+	export DOCKER_BUILDKIT=1
+
+	# GNU
+	alias sed='gsed'
+	alias find='gfind'
+	alias grep='ggrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox}'
+	function opend() { echo "$1"; cd "$1" && open-by-N.sh -i; cd -; }
+
+	# Bat theme
+	export BAT_THEME='ansi'
+	alias cat=bat
+
+	# Avoid certain functions
+	function gs() {
+		local X="$(basename "${SHELL}")"
+		if [ "${X}" = 'zsh' ]; then
+			>&2 echo 'zsh: command not found: gs'
+		elif [ "${X}" = 'bash' ]; then
+			>&2 echo 'bash: gs: command not found'
+		elif [ "${X}" = 'sh' ]; then
+			>&2 echo 'sh: gs: command not found'
+		else
+			>&2 echo "${X}: gs: command not found"
+		fi
+	}
+
+fi
