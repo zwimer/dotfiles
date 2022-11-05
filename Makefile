@@ -15,6 +15,11 @@ python: shell
 	./scripts/pkg.sh install_if2 dnf yum     python3-pip python3-virtualenvwrapper
 	./scripts/py_exports.sh
 
+##!    quote   : install quote
+.PHONY: quote
+quote: shell python
+	./scripts/install_quote.sh
+
 ##!    rm      : install's delayed_rm into ~/.local/bin
 .PHONY: rm
 rm: shell python
@@ -71,7 +76,7 @@ vim: shell
 
 ##!    most    : do all of the above in order
 .PHONY: most
-most: shell python rm zsh git tmux gdb vim
+most: shell python quote rm zsh git tmux gdb vim
 
 ##!    vim_ycm : install the vim plugin YouCompleteMe
 .PHONY: vim_ycm
