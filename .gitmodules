@@ -1,3 +1,0 @@
-[submodule "delayed_rm"]
-	path = delayed_rm
-	url = https://github.com/zwimer/delayed_rm.git

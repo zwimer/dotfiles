@@ -1,6 +1,6 @@
 #!/bin/bash -i
 
-mkvirtualenv quote_lines_cli
+mkvirtualenv dotfiles_cli
 
 set -eux
 pip3 install quote_lines

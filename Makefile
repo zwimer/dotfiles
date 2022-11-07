@@ -15,18 +15,15 @@ python: shell
 	./scripts/pkg.sh install_if2 dnf yum     python3-pip python3-virtualenvwrapper
 	./scripts/py_exports.sh
 
+##!    rm      : install delayed_rm
+.PHONY: rm
+rm: shell python
+	./scripts/install_delayed_rm.sh
+
 ##!    quote   : install quote
 .PHONY: quote
 quote: shell python
 	./scripts/install_quote.sh
-
-##!    rm      : install's delayed_rm into ~/.local/bin
-.PHONY: rm
-rm: shell python
-	git submodule update --init ./delayed_rm
-	mkdir -p ~/.local/bin/
-	sudo cp ./delayed_rm/delayed_rm.py ~/.local/bin/delayed_rm.py
-	./scripts/append.sh str "alias rm='~/.local/bin/delayed_rm.py'" ~/.shell_init
 
 ##!    zsh     : install zsh, oh-my-zsh, and plugins, and configure them
 .PHONY: zsh
@@ -77,7 +74,7 @@ vim: shell
 
 ##!    most    : do all of the above in order
 .PHONY: most
-most: shell python quote rm zsh git tmux gdb vim
+most: shell python rm quote zsh git tmux gdb vim
 
 ##!    vim_ycm : install the vim plugin YouCompleteMe
 .PHONY: vim_ycm
