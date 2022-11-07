@@ -48,6 +48,7 @@ git:
 .PHONY: tmux
 tmux:
 	./scripts/pkg.sh install tmux
+	./scripts/append.sh file ./data/tmux_ssh ~/.shell_init
 	./scripts/append.sh file ./conf/.tmux.conf ~/.tmux.conf
 	git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm || true
 	~/.tmux/plugins/tpm/scripts/install_plugins.sh

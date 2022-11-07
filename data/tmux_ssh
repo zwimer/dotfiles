@@ -1,0 +1,3 @@
+if [ -z "${TMUX}" ] && [ -n "${SSH_CONNECTION}" ]; then
+	tmux attach -t default || tmux new -s default
+fi

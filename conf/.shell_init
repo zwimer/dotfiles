@@ -1,7 +1,3 @@
-if [ -z "${TMUX}" ]  && [ -n "${SSH_CONNECTION}" ]; then
-    tmux attach -t default || tmux new -s default
-fi
-
 # ------------------- Exports -------------------
 
 # General
@@ -36,7 +32,7 @@ alias untar='tar -xvf'
 function myhost() { cat /etc/hosts | grep -i "$1"; }
 
 # Quote
-if [ command -v quote &> /dev/null]]; then
+if [ command -v quote &> /dev/null ]; then
 	alias qargs='quote | xargs -o '
 	alias qargsJ='quote | xargs -oJ {} '
 fi
