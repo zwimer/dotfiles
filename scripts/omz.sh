@@ -1,8 +1,15 @@
 #!/bin/bash -eu
 
+cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+./pkg.sh install curl
+
 URL="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
 echo "Running ${URL}"
-CHSH=no RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl "${URL}")"
+env -u ZSH \
+	CHSH=no \
+	RUNZSH=no \
+	KEEP_ZSHRC=yes \
+	sh -c "$(curl "${URL}")"
 
 PDIR="${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins"
 mkdir -p "${PDIR}"
