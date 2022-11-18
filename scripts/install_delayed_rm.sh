@@ -3,6 +3,7 @@
 mkvirtualenv dotfiles_cli
 
 set -eux
+pip3 install -U pip
 pip3 install delayed_rm
 
 which delayed_rm &> /dev/null # Test
