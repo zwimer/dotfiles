@@ -78,7 +78,7 @@ most: shell python rm quote zsh git tmux gdb vim
 
 ##!    vim_ycm : install the vim plugin YouCompleteMe
 .PHONY: vim_ycm
-vim_ycm: vim_ycm_check vim python
+vim_ycm: vim vim_ycm_check python
 	./scripts/pkg.sh install_if2 apt apt-get cmake python3-dev   build-essential
 	./scripts/pkg.sh install_if2 dnf yum     cmake python3-devel gcc-c++ make
 	sed -i "s|\" Plugin 'Valloric/YouCompleteMe'| Plugin 'Valloric/YouCompleteMe'|g" ~/.vimrc
