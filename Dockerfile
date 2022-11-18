@@ -10,10 +10,13 @@ RUN pkg install_if2 dnf yum which
 COPY . /dotfiles
 WORKDIR /dotfiles
 
-# Non-root user (fedora uses the wheel group instead of sudo)
+# Group should probbaly be: wheel or sudo
+ARG SU_GROUP=wheel
+
+# Non-root user
 RUN useradd -ms /bin/bash user
-RUN usermod -aG wheel user
-RUN echo '%wheel ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+RUN usermod -aG ${SU_GROUP} user
+RUN echo "%"${SU_GROUP}" ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 RUN chown -R user:user .
 USER user
 
