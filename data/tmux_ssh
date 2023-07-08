@@ -1,3 +1,8 @@
 if [ -z "${TMUX}" ] && [ -n "${SSH_CONNECTION}" ]; then
-	tmux attach -t default || tmux new -s default
+    tmux attach -t default || tmux new -s default
+elif [ -n "${TMUX}" ]; then
+    function sudo() {
+        export $(tmux show-environment | grep '^SSH_AUTH_SOCK=');
+        /usr/bin/sudo "$@"
+    }
 fi
