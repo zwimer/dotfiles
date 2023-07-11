@@ -10,13 +10,11 @@ RUN pkg install_if2 dnf yum which
 COPY . /dotfiles
 WORKDIR /dotfiles
 
-# Group should probbaly be: wheel or sudo
-ARG SU_GROUP=wheel
-
 # Non-root user
+RUN groupadd -fr sudo
 RUN useradd -ms /bin/bash user
-RUN usermod -aG ${SU_GROUP} user
-RUN echo "%"${SU_GROUP}" ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+RUN usermod -aG sudo user
+RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 RUN chown -R user:user .
 USER user
 
