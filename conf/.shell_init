@@ -29,7 +29,11 @@ alias cp='cp -i'
 alias g='git'
 alias la='ls -lAG'
 alias untar='tar -xvf'
-function myhost() { cat /etc/hosts | grep -i "$1"; }
+alias untar='tar -xvf --same-owner'
+alias ctar='tar cvfp'
+alias today='date "+%-m-%-d"'
+alias encrypt='gpg --symmetric --cipher-algo AES256'
+function get_host() { cat /etc/hosts | grep -i "$1"; }
 
 # Quote
 if [ command -v quote &> /dev/null ]; then

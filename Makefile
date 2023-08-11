@@ -72,9 +72,16 @@ vim: shell
 	./scripts/append.sh file ./conf/gutter.vim ~/.vim/after/gutter.vim '" '
 	@echo '*** vim setup ! ***'
 
+##!    gpg     : install gpg
+.PHONY: gpg
+rm: shell
+	./scripts/pkg.sh install gnupg
+	mkdir -m 700 ~/.gnupg || true
+	./scripts/append.sh file ./conf/.gnupg/gpg.conf ~/.gnupg/gpg.conf
+
 ##!    most    : do all of the above in order
 .PHONY: most
-most: shell python rm quote zsh git tmux gdb vim
+most: shell python rm quote zsh git tmux gdb vim gpg
 
 ##!    vim_ycm : install the vim plugin YouCompleteMe
 .PHONY: vim_ycm
