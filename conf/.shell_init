@@ -1,3 +1,5 @@
+# Read by all shells
+
 # ------------------- Exports -------------------
 
 # General
@@ -12,11 +14,12 @@ export SAVEHIST=10000000
 export FFSEND_HOST='https://send.zwimer.com/'
 export LSCOLORS='ExFxCxDxBxegedabagacad'
 export DOCKER_SCAN_SUGGEST=false
+export DOCKER_BUILDKIT=1
 
 # ------------------- General purpose -------------------
 
 # Default flags
-alias g++='g++ -Wall -Wextra -std=c++11'
+alias g++='g++ -Wall -Wextra -std=c++17'
 alias gcc='gcc -Wall -Wextra'
 alias objdump='objdump -M intel'
 alias octave='octave --no-gui'
@@ -31,14 +34,13 @@ alias la='ls -lAG'
 alias untar='tar --same-owner -xvf'
 alias ctar='tar czvpf'
 alias today='date "+%-m-%-d"'
-alias encrypt='gpg --symmetric --cipher-algo AES256'
+alias encrypt='gpg --symmetric --no-symkey-cache --cipher-algo AES256'
 function get_host() { cat /etc/hosts | grep -i "$1"; }
+function encrypt-single() { gpg --symmetric --no-symkey-cache --cipher-algo AES256 -o "$1".gpg "$1"; }
 
 # Quote
-if [ command -v quote &> /dev/null ]; then
-	alias qargs='quote | xargs -o '
-	alias qargsJ='quote | xargs -oJ {} '
-fi
+alias qargs='quote | xargs -o '
+alias qargsJ='quote | xargs -oJ {} '
 
 # Search
 alias search='find . | grep -i'
@@ -78,20 +80,24 @@ if [[ "${OSTYPE}" == 'darwin'* ]]; then
 	export HOMEBREW_NO_ANALYTICS=1
 	eval "$(/opt/homebrew/bin/brew shellenv)"
 
-	# Docker
-	export DOCKER_BUILDKIT=1
-
 	# GNU
 	alias sed='gsed'
 	alias find='gfind'
 	alias grep='ggrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox}'
+	alias cp='gcp -i' # gcp, not cp; because cp -R a/ b differs on BSD cp
+
+	# New commands
 	function opend() { echo "$1"; cd "$1" && open-by-N.sh -i; cd -; }
+	function loudfail() {
+		set -E
+		trap 'echo FAIL' ERR
+	}
 
 	# Bat theme
 	export BAT_THEME='ansi'
 	alias cat=bat
 
-	# Avoid certain functions
+	# Fixes
 	function gs() {
 		local X="$(basename "${SHELL}")"
 		if [ "${X}" = 'zsh' ]; then
@@ -104,5 +110,8 @@ if [[ "${OSTYPE}" == 'darwin'* ]]; then
 			>&2 echo "${X}: gs: command not found"
 		fi
 	}
+	if [ command -v open.sh &> /dev/null ]; then
+		alias open='open.sh'
+	fi
 
 fi
