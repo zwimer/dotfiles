@@ -13,6 +13,7 @@ export SAVEHIST=10000000
 # App config
 export FFSEND_HOST='https://send.zwimer.com/'
 export LSCOLORS='ExFxCxDxBxegedabagacad'
+export DOCKER_SCOUT_SUGGEST=false
 export DOCKER_SCAN_SUGGEST=false
 export DOCKER_BUILDKIT=1
 

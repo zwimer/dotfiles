@@ -1,7 +1,7 @@
 # All lines starting with ##! shall be taken
 # as documentation for make help to interpret
 
-##!    shell : copy over aliases and exports and updates bash and zshrc
+##!    shell   : copy over aliases and exports and updates bash and zshrc
 .PHONY: shell
 shell:
 	./scripts/append.sh file ./conf/.shell_init ~/.shell_init
@@ -74,7 +74,7 @@ vim: shell
 
 ##!    gpg     : install gpg
 .PHONY: gpg
-rm: shell
+gpg: shell
 	./scripts/pkg.sh install gnupg
 	mkdir -m 700 ~/.gnupg || true
 	./scripts/append.sh file ./conf/.gnupg/gpg.conf ~/.gnupg/gpg.conf
