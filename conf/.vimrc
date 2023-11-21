@@ -7,8 +7,8 @@ set encoding=utf-8
 " Set the tex flavor
 let g:tex_flavor = 'tex'
 
-set nocompatible		" be iMproved
-filetype off			" for vundle, set on later
+set nocompatible " be iMproved
+filetype off     " for vundle, set on later
 
 " Set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -21,10 +21,24 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Plugins
-" Plugin 'Valloric/YouCompleteMe'         " Autocomplete
-Plugin 'tpope/vim-commentary'           " Commenting via gcc
-Plugin 'airblade/vim-gitgutter'         " Git status of lines
-Plugin 'ntpeters/vim-better-whitespace' " Trim trailing whitespace
+Plugin 'mbbill/undotree'                    " Undo tree
+Plugin 'airblade/vim-gitgutter'             " Git status of lines
+Plugin 'tpope/vim-commentary'               " Commenting via gcc
+Plugin 'bogado/file-line'                   " Run vim A:B to open file a at line B
+Plugin 'ntpeters/vim-better-whitespace'     " Handles trailing whitespace (trim on save also)
+" Plugin 'Valloric/YouCompleteMe'             " Autocomplete
+" Plugin 'lervag/vimtex'                      " Latex
+" Plugin 'tpope/vim-surround'                 " Change surrounding characters
+" Plugin 'chrisbra/csv'                       " csv's work better (requires config!)
+" Plugin 'godlygeek/tabular'                  " Align items with tabs at a character
+" Plugin 'nathanaelkane/vim-indent-guides'    " Indent guides
+" Plugin 'vim-scripts/haskell'                " Haskell
+if has("unix")
+    let s:uname = system("uname")
+    if s:uname == "Darwin\n"
+        let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
+    endif
+endif
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -109,6 +123,10 @@ let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_auto_colors = 0
 let g:indent_guides_guide_size = 1
 
+" diff colors
+if &diff
+    colorscheme github
+endif
 
 "-------Custom commands-------
 
@@ -120,8 +138,8 @@ command! PrependLineNumbers %s/^/\=printf('%-4d', line('.'))
 " [s or ]s to move spell check selection left or right
 " z= to use spell check on selection
 function! TEXT_fn()
-   	set spell spelllang=en_us
-	set breakindent
+    set spell spelllang=en_us
+    set breakindent
 endfunction
 
 " Used to easily call TEXT
@@ -130,7 +148,7 @@ command! TEXT call TEXT_fn()
 " Disable beeping
 set noerrorbells visualbell t_vb=
 if has('autocmd')
-	autocmd GUIEnter * set visualbell t_vb=
+    autocmd GUIEnter * set visualbell t_vb=
 endif
 
 function! DisplayColorSchemes()

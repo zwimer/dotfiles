@@ -71,9 +71,12 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 export ZSH_AUTOSUGGEST_USE_ASYNC=1
-plugins=(sudo history-substring-search zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(sudo zsh-autosuggestions zsh-syntax-highlighting)  # b/c fzf, no history-substring-search
 
 source $ZSH/oh-my-zsh.sh
+
+# No beep
+unsetopt BEEP
 
 # Alter color scheme
 typeset -A ZSH_HIGHLIGHT_STYLES
@@ -86,4 +89,4 @@ ZSH_HIGHLIGHT_STYLES[redirection]='fg=213'
 ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=213'
 
 # When unpushed commits exist, make it obvious
-export ZSH_THEME_GIT_PROMPT_AHEAD="%{$BLUE%}(↑)"
+export ZSH_THEME_GIT_PROMPT_AHEAD="%{$BLUE%}(↑)"  # Might cause issues in docker

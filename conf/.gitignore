@@ -1,4 +1,15 @@
-**/__pycache__/
+# Mac
 **/.DS_Store
-*.swp
-*.swo
+
+# Python
+**/__pycache__/*
+**/.mypy_cache/*
+**/*.egg-info/*
+**/.pytest_cache/*
+
+# Vim
+**/*.swp
+**/*.swo
+
+# Pycharm
+**/.idea/*

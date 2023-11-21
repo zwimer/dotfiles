@@ -1,6 +1,6 @@
 #!/bin/bash -i
 
-mkvirtualenv dotfiles_cli
+mkvirtualenv cli
 
 set -eux
 pip3 install -U pip

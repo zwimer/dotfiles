@@ -17,6 +17,14 @@ export DOCKER_SCAN_SUGGEST=false
 export DOCKER_CLI_HINTS=false
 export DOCKER_BUILDKIT=1
 
+# ------------------- OS Specific First -------------------
+
+if [[ "${OSTYPE}" == 'darwin'* ]]; then
+	# Brew
+	export HOMEBREW_NO_ANALYTICS=1
+	eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
 # ------------------- General purpose -------------------
 
 # Default flags
@@ -58,9 +66,82 @@ function pip() {
 }
 alias pip3=pip
 
+# Configuration virtualenv
+export WORKON_HOME="${HOME}/.virtualenvs"
+command -v virtualenvwrapper.sh > /dev/null
+if [ "${?}" ]; then
+	export PROJECT_HOME="${HOME}/.mkproject_projects"
+	if [[ "${OSTYPE}" == 'darwin'* ]]; then  # macOS
+		export VIRTUALENVWRAPPER_PYTHON="${HOMEBREW_PREFIX}/bin/python3"
+		export VIRTUALENVWRAPPER_VIRTUALENV="${HOMEBREW_PREFIX}/bin/virtualenv"
+		source "${HOMEBREW_PREFIX}/bin/virtualenvwrapper_lazy.sh"
+	else  # Linux
+		export VIRTUALENVWRAPPER_PYTHON="/usr/bin/python3"
+		export VIRTUALENVWRAPPER_VIRTUALENV="/usr/bin/virtualenv"
+		[[ -f "/usr/bin/virtualenvwrapper_lazy.sh" ]] \
+			&& source "/usr/bin/virtualenvwrapper_lazy.sh" \
+			|| source "/usr/share/virtualenvwrapper/virtualenvwrapper_lazy.sh"
+	fi
+fi
+
+# virtualenv: cli
+if [ -d "${WORKON_HOME}/cli/bin/" ]; then
+	export PATH="${PATH}:${WORKON_HOME}/cli/bin/"
+fi
+command -v delayed_rm > /dev/null
+if [ "${?}" ]; then
+	alias rm=delayed_rm
+fi
+
+# fzf
+command -v fzf &> /dev/null
+if [ "${?}" ]; then
+
+	# CTRL-/ to toggle small preview window to see the full command
+	# CTRL-Y to copy the command into clipboard using pbcopy
+	export FZF_CTRL_R_OPTS="
+		--preview 'echo {}' --preview-window up:3:hidden:wrap
+		--bind 'ctrl-/:toggle-preview'
+		--bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+		--color header:italic
+		--header 'CTRL-/ toggles preview, CTRL-Y copies to clipboard on macOS'"
+
+	# Print tree structure in the preview window
+	export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
+
+	# General Config
+	export FZF_COMPLETION_TRIGGER='~~'
+	export FZF_COMPLETION_OPTS='--border --info=inline'
+	_fzf_comprun() {
+		local CMD="${1}"
+		shift
+		case "${CMD}" in
+			cd)           fzf --preview 'tree -C {} | head -200'   "$@" ;;
+			export|unset) fzf --preview "eval 'echo \$'{}"         "$@" ;;
+			*)            fzf "$@" ;;
+		esac
+	}
+
+	# Auto completion and key bindings
+	if [[ -n "${ZSH_NAME}" ]]; then
+		if [[ "${OSTYPE}" == 'darwin'* ]]; then
+			source "${HOMEBREW_PREFIX}/opt/fzf/shell/completion.zsh"
+			source "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh"
+		elif [[ "$(grep ^ID= /etc/os-release)" == ID=fedora ]]; then
+			autoload -U fzf  # Might cause issues in docker
+			source /usr/share/fzf/shell/key-bindings.zsh
+		fi
+		# Not loading for ubuntu b/c bug: https://github.com/junegunn/fzf/issues/2790
+	fi
+fi
+
 # ------------------- OS Specific -------------------
 
 if [[ "${OSTYPE}" == 'darwin'* ]]; then
+
+	# Fixes
+	alias gs="PATH='' gs"
+	alias python="python3"
 
 	# Fixers
 	alias fix-audio="ps aux | grep 'coreaudio[d]' | awk '{print \$2}' | xargs sudo kill"
@@ -74,18 +155,17 @@ if [[ "${OSTYPE}" == 'darwin'* ]]; then
 	# Linux-ish
 	function ldd() { otool -L "${1}"; }
 	function ip() { ifconfig | grep inet | grep -v '::' | awk '{print $2}'; }
-	alias google-chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
-	alias python=python3
-
-	# Brew
-	export HOMEBREW_NO_ANALYTICS=1
-	eval "$(/opt/homebrew/bin/brew shellenv)"
+	alias google-chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 
 	# GNU
-	alias sed='gsed'
-	alias find='gfind'
+	alias sed="gsed"
+	alias find="gfind"
 	alias grep='ggrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox}'
-	alias cp='gcp -i' # gcp, not cp; because cp -R a/ b differs on BSD cp
+	alias cp="gcp -i" # gcp, not cp; because cp -R a/ b differs on BSD cp
+
+	# Bat
+	export BAT_THEME="ansi"
+	alias cat=bat
 
 	# New commands
 	function opend() { echo "$1"; cd "$1" && open-by-N.sh -i; cd -; }
@@ -94,25 +174,9 @@ if [[ "${OSTYPE}" == 'darwin'* ]]; then
 		trap 'echo FAIL' ERR
 	}
 
-	# Bat theme
-	export BAT_THEME='ansi'
-	alias cat=bat
-
-	# Fixes
-	function gs() {
-		local X="$(basename "${SHELL}")"
-		if [ "${X}" = 'zsh' ]; then
-			>&2 echo 'zsh: command not found: gs'
-		elif [ "${X}" = 'bash' ]; then
-			>&2 echo 'bash: gs: command not found'
-		elif [ "${X}" = 'sh' ]; then
-			>&2 echo 'sh: gs: command not found'
-		else
-			>&2 echo "${X}: gs: command not found"
-		fi
-	}
-	if [ command -v open.sh &> /dev/null ]; then
-		alias open='open.sh'
+	# ccache
+	command -v ccache &> /dev/null
+	if [ "${?}" ]; then
+		export PATH="${HOMEBREW_PREFIX}/opt/ccache/libexec:${PATH}"
 	fi
-
 fi

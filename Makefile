@@ -25,12 +25,18 @@ rm: shell python
 quote: shell python
 	./scripts/install_quote.sh
 
-##!    zsh     : install zsh, oh-my-zsh, and plugins, and configure them
-.PHONY: zsh
-zsh: shell
+##!    basic_zsh     : install zsh, oh-my-zsh, and plugins, and configure them
+.PHONY: basic_zsh
+basic_zsh: shell
 	./scripts/pkg.sh install zsh
 	./scripts/append.sh file ./conf/.zshrc ~/.zshrc
 	./scripts/omz.sh
+	@echo '*** basic zsh setup ! ***'
+
+##!    zsh     : install zsh, oh-my-zsh, and plugins, and configure them (also installs fzf and tree)
+.PHONY: zsh
+zsh: basic_zsh
+	./scripts/pkg.sh install fzf tree
 	@echo '*** zsh setup ! ***'
 
 ##!    git     : setup git aliases
