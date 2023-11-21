@@ -25,7 +25,6 @@ rm: shell python
 quote: shell python
 	./scripts/install_quote.sh
 
-##!    basic_zsh     : install zsh, oh-my-zsh, and plugins, and configure them
 .PHONY: basic_zsh
 basic_zsh: shell
 	./scripts/pkg.sh install zsh
