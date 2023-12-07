@@ -69,7 +69,7 @@ alias pip3=pip
 # Configuration virtualenv
 export WORKON_HOME="${HOME}/.virtualenvs"
 command -v virtualenvwrapper.sh > /dev/null
-if [ "${?}" ]; then
+if [ "${?}" -eq 0 ]; then
 	export PROJECT_HOME="${HOME}/.mkproject_projects"
 	if [[ "${OSTYPE}" == 'darwin'* ]]; then  # macOS
 		export VIRTUALENVWRAPPER_PYTHON="${HOMEBREW_PREFIX}/bin/python3"
@@ -89,13 +89,17 @@ if [ -d "${WORKON_HOME}/cli/bin/" ]; then
 	export PATH="${PATH}:${WORKON_HOME}/cli/bin/"
 fi
 command -v delayed_rm > /dev/null
-if [ "${?}" ]; then
-	alias rm=delayed_rm
+if [ "${?}" -eq 0 ]; then
+	alias rm='delayed_rm'
+fi
+command -v sigsleep > /dev/null
+if [ "${?}" -eq 0 ]; then
+	alias sleep='sigsleep'
 fi
 
 # fzf
 command -v fzf &> /dev/null
-if [ "${?}" ]; then
+if [ "${?}" -eq 0 ]; then
 
 	# CTRL-/ to toggle small preview window to see the full command
 	# CTRL-Y to copy the command into clipboard using pbcopy
@@ -141,7 +145,8 @@ if [[ "${OSTYPE}" == 'darwin'* ]]; then
 
 	# Fixes
 	alias gs="PATH='' gs"
-	alias python="python3"
+	alias python='python3'
+	export RSYNC_OLD_ARGS=1  # Until zsh fixes this: https://www.zsh.org/mla/workers/2022/msg00814.html
 
 	# Fixers
 	alias fix-audio="ps aux | grep 'coreaudio[d]' | awk '{print \$2}' | xargs sudo kill"
@@ -176,7 +181,7 @@ if [[ "${OSTYPE}" == 'darwin'* ]]; then
 
 	# ccache
 	command -v ccache &> /dev/null
-	if [ "${?}" ]; then
+	if [ "${?}" -eq 0 ]; then
 		export PATH="${HOMEBREW_PREFIX}/opt/ccache/libexec:${PATH}"
 	fi
 fi
