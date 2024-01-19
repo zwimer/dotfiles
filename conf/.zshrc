@@ -71,7 +71,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 export ZSH_AUTOSUGGEST_USE_ASYNC=1
-plugins=(sudo zsh-autosuggestions zsh-syntax-highlighting)  # b/c fzf, no history-substring-search
+plugins=(zsudo zsh-autosuggestions zsh-syntax-highlighting)  # b/c fzf, no history-substring-search
 
 source $ZSH/oh-my-zsh.sh
 
