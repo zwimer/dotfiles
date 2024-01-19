@@ -7,8 +7,8 @@ export GT='https://www.github.com/zwimer/'
 export LANG='en_US.UTF-8'
 
 # History
-export HISTSIZE=10000000
-export SAVEHIST=10000000
+export HISTSIZE=1000000000
+export SAVEHIST=1000000000
 
 # App config
 export FFSEND_HOST='https://send.zwimer.com/'
@@ -139,9 +139,31 @@ if [ "${?}" -eq 0 ]; then
 	fi
 fi
 
+# Useful functions
+function stopwatch() {
+	local C=1
+	while true; do
+		sleep 1
+		echo "$C"
+		C="$((C+1))"
+	done
+}
+
 # ------------------- OS Specific -------------------
 
-if [[ "${OSTYPE}" == 'darwin'* ]]; then
+# Temp vars
+SI_GREP_ARGS="--color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.mypy_cache,__pycache__}"
+
+if [[ "${OSTYPE}" != 'darwin'* ]]; then
+	alias grep="grep ${SI_GREP_ARGS}"
+else
+	# Help
+	if [[ -n "${ZSH_NAME}" ]]; then
+		unalias run-help 2> /dev/null
+		autoload run-help
+		HELPDIR=/usr/share/zsh/"${ZSH_VERSION}"/help
+		alias help=run-help
+	fi
 
 	# Fixes
 	alias gs="PATH='' gs"
@@ -165,7 +187,7 @@ if [[ "${OSTYPE}" == 'darwin'* ]]; then
 	# GNU
 	alias sed="gsed"
 	alias find="gfind"
-	alias grep='ggrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox}'
+	alias grep="ggrep ${SI_GREP_ARGS}"
 	alias cp="gcp -i" # gcp, not cp; because cp -R a/ b differs on BSD cp
 
 	# Bat
@@ -185,3 +207,9 @@ if [[ "${OSTYPE}" == 'darwin'* ]]; then
 		export PATH="${HOMEBREW_PREFIX}/opt/ccache/libexec:${PATH}"
 	fi
 fi
+
+unset SI_GREP_ARGS
+
+# ------------------- After OS Specific Aliases -------------------
+
+function ip_where() { curl -s "ipinfo.io/${1}/json" | jq -r ".city, .region" | sed -z 's/\n/, /'; }

@@ -26,9 +26,9 @@ Plugin 'airblade/vim-gitgutter'             " Git status of lines
 Plugin 'tpope/vim-commentary'               " Commenting via gcc
 Plugin 'bogado/file-line'                   " Run vim A:B to open file a at line B
 Plugin 'ntpeters/vim-better-whitespace'     " Handles trailing whitespace (trim on save also)
+Plugin 'tpope/vim-surround'                 " Change surrounding characters
 " Plugin 'Valloric/YouCompleteMe'             " Autocomplete
 " Plugin 'lervag/vimtex'                      " Latex
-" Plugin 'tpope/vim-surround'                 " Change surrounding characters
 " Plugin 'chrisbra/csv'                       " csv's work better (requires config!)
 " Plugin 'godlygeek/tabular'                  " Align items with tabs at a character
 " Plugin 'nathanaelkane/vim-indent-guides'    " Indent guides
