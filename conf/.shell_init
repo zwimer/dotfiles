@@ -9,6 +9,10 @@ export LANG='en_US.UTF-8'
 # History
 export HISTSIZE=1000000000
 export SAVEHIST=1000000000
+export HISTFILESIZE=1000000000
+if [ -n "${ZSH_VERSION}" ]; then
+    HISTFILE=~/.zsh_history2  # Do not export (bash should not inherit this!) !
+fi
 
 # App config
 export FFSEND_HOST='https://send.zwimer.com/'
