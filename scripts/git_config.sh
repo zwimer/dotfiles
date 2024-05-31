@@ -3,7 +3,7 @@
 
 # User
 git config --global user.name zwimer
-git config --global user.email zwimer@gmail.com
+git config --global user.email github@zwimer.com
 SSHDIR="${HOME}/.ssh"
 if [ ! -d "${SSHDIR}" ]; then
 	mkdir -m 700 "${SSHDIR}"
