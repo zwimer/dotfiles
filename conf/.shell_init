@@ -9,6 +9,7 @@ export LANG='en_US.UTF-8'
 # History
 export HISTSIZE=1000000000
 export SAVEHIST=1000000000
+export HISTFILESIZE=1000000000
 
 # App config
 export FFSEND_HOST='https://send.zwimer.com/'
@@ -157,6 +158,13 @@ SI_GREP_ARGS="--color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.myp
 if [[ "${OSTYPE}" != 'darwin'* ]]; then
 	alias grep="grep ${SI_GREP_ARGS}"
 else
+
+	# Checks
+	grep 'HISTSIZE=1000000000' /etc/zshrc > /dev/null 2> /dev/null
+	if [ "${?}" -ne 0 ]; then
+		echo "*** Set history settings in /etc/zshrc ! ***"
+	fi
+
 	# Help
 	if [[ -n "${ZSH_NAME}" ]]; then
 		unalias run-help 2> /dev/null
