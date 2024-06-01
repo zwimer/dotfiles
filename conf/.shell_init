@@ -9,10 +9,6 @@ export LANG='en_US.UTF-8'
 # History
 export HISTSIZE=1000000000
 export SAVEHIST=1000000000
-export HISTFILESIZE=1000000000
-if [ -n "${ZSH_VERSION}" ]; then
-    HISTFILE=~/.zsh_history2  # Do not export (bash should not inherit this!) !
-fi
 
 # App config
 export FFSEND_HOST='https://send.zwimer.com/'
@@ -47,9 +43,9 @@ alias la='ls -lAG'
 alias untar='tar --same-owner -xvf'
 alias ctar='tar czvpf'
 alias today='date "+%-m-%-d"'
-alias encrypt='gpg --symmetric --no-symkey-cache --cipher-algo AES256'
+alias encrypt-gpg='gpg --symmetric --no-symkey-cache --cipher-algo AES256'
 function get_host() { cat /etc/hosts | grep -i "$1"; }
-function encrypt-single() { gpg --symmetric --no-symkey-cache --cipher-algo AES256 -o "$1".gpg "$1"; }
+function encrypt() { gpg --symmetric --no-symkey-cache --cipher-algo AES256 -o "$1".gpg "$1"; }
 
 # Quote
 alias qargs='quote | xargs -o '
