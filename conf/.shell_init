@@ -12,9 +12,6 @@ export SAVEHIST=1000000000
 export HISTFILESIZE=1000000000
 
 # App config
-if [ ! -z "${ZSH+x}" ] && [ ! -z "${HOST+x}" ]; then
-	export ZSH_COMPDUMP="${ZSH}/cache/.zcompdump-${HOST}"
-fi
 export FFSEND_HOST='https://send.zwimer.com/'
 export LSCOLORS='ExFxCxDxBxegedabagacad'
 export DOCKER_SCAN_SUGGEST=false
