@@ -12,8 +12,11 @@ export SAVEHIST=1000000000
 export HISTFILESIZE=1000000000
 
 # App config
+if [ ! -z "${ZSH+x}" ] && [ ! -z "${HOST+x}" ]; then
+	export ZSH_COMPDUMP="${ZSH}/cache/.zcompdump-${HOST}"
+fi
 export FFSEND_HOST='https://send.zwimer.com/'
-export LSCOLORS='ExFxCxDxBxegedabagacad'
+export LS_COLORS="rs=0:di=01;34:ln=01;35:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=01;37;41:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;31:"
 export DOCKER_SCAN_SUGGEST=false
 export DOCKER_CLI_HINTS=false
 export DOCKER_BUILDKIT=1
@@ -34,13 +37,14 @@ alias gcc='gcc -Wall -Wextra'
 alias objdump='objdump -M intel'
 alias octave='octave --no-gui'
 alias cling='cling --std=c++17'
+alias ls='ls --color'
 alias vim='vim -p'
 alias mv='mv -i'
 alias cp='cp -i'
 
 # New commands
 alias g='git'
-alias la='ls -lAG'
+alias la='ls -lA'
 alias untar='tar --same-owner -xvf'
 alias ctar='tar czvpf'
 alias today='date "+%-m-%-d"'
@@ -150,6 +154,13 @@ function stopwatch() {
 	done
 }
 
+function beep() {
+	for i in {1.."$1"}; do
+		echo -ne '\007';
+		sleep .2
+	done
+}
+
 # ------------------- OS Specific -------------------
 
 # Temp vars
@@ -158,6 +169,8 @@ SI_GREP_ARGS="--color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.myp
 if [[ "${OSTYPE}" != 'darwin'* ]]; then
 	alias grep="grep ${SI_GREP_ARGS}"
 else
+	# Aliases
+	alias lsregister="/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister"
 
 	# Checks
 	grep 'HISTSIZE=1000000000' /etc/zshrc > /dev/null 2> /dev/null
@@ -193,10 +206,15 @@ else
 	alias google-chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 
 	# GNU
-	alias sed="gsed"
-	alias find="gfind"
-	alias grep="ggrep ${SI_GREP_ARGS}"
-	alias cp="gcp -i" # gcp, not cp; because cp -R a/ b differs on BSD cp
+	export PATH="/opt/homebrew/Cellar/libtool/2.4.7/libexec/gnubin:${PATH}"
+	export PATH="/opt/homebrew/Cellar/coreutils/9.5/libexec/gnubin:${PATH}"
+	export PATH="/opt/homebrew/Cellar/gnu-tar/1.35/libexec/gnubin:${PATH}"
+	export PATH="/opt/homebrew/Cellar/grep/3.11/libexec/gnubin:${PATH}"
+	export PATH="/opt/homebrew/Cellar/gnu-sed/4.9/libexec/gnubin:${PATH}"
+	export PATH="/opt/homebrew/Cellar/make/4.4.1/libexec/gnubin:${PATH}"
+	export PATH="/opt/homebrew/Cellar/findutils/4.10.0/libexec/gnubin:${PATH}"
+	alias grep="ggrep ${SI_GREP_ARGS}" # Explicitly ggrep b/c args are cross platform
+	alias cp="gcp -i" # Explicitly gcp, not cp; because cp -R a/ b differs on BSD cp
 
 	# Bat
 	export BAT_THEME="ansi"
