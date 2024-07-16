@@ -76,6 +76,8 @@ gdb:
 vim: shell
 	./scripts/pkg.sh install vim
 	./scripts/default_vim.sh
+	mkdir -v -p ~/.vim/colors
+	./scripts/append.sh file ./conf/github.vim ~/.vim/colors/github.vim '" '
 	./scripts/append.sh file ./conf/.vimrc ~/.vimrc '" '
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim || true
 	vim +PluginInstall +qall

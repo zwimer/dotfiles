@@ -1,5 +1,5 @@
 ARG DISTRO=fedora
-FROM "${DISTRO}" as base
+FROM "${DISTRO}" AS base
 
 # Install dependencies (we use pkg for ease but manual is fine too)
 COPY ./scripts/pkg.sh /bin/pkg

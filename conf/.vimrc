@@ -21,12 +21,12 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Plugins
-Plugin 'mbbill/undotree'                    " Undo tree
-Plugin 'airblade/vim-gitgutter'             " Git status of lines
+Plugin 'airblade/vim-gitgutter'             " Git status of lines (switched to 'main' branch)
 Plugin 'tpope/vim-commentary'               " Commenting via gcc
-Plugin 'bogado/file-line'                   " Run vim A:B to open file a at line B
+Plugin 'bogado/file-line'                   " Run vim A:B to open file a at line B (switched to 'main' branch)
 Plugin 'ntpeters/vim-better-whitespace'     " Handles trailing whitespace (trim on save also)
 Plugin 'tpope/vim-surround'                 " Change surrounding characters
+" Plugin 'mbbill/undotree'                    " Undo tree
 " Plugin 'Valloric/YouCompleteMe'             " Autocomplete
 " Plugin 'lervag/vimtex'                      " Latex
 " Plugin 'chrisbra/csv'                       " csv's work better (requires config!)
