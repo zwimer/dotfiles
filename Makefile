@@ -65,6 +65,12 @@ gdb:
 	./scripts/append.sh file ./conf/.gdbinit ~/.gdbinit
 	@echo '*** gdb setup ! ***'
 
+##!    lldb     : configure lldb
+.PHONY: lldb
+gdb:
+	./scripts/append.sh file ./conf/.lldbinit ~/.lldbinit
+	@echo '*** lldb setup ! ***'
+
 ##!    vim     : install and configure vim and plugins
 .PHONY: vim
 vim: shell
@@ -84,7 +90,7 @@ gpg: shell
 	mkdir -m 700 ~/.gnupg || true
 	./scripts/append.sh file ./conf/.gnupg/gpg.conf ~/.gnupg/gpg.conf
 
-##!    most    : do all of the above in order
+##!    most    : do most of the above in order
 .PHONY: most
 most: shell python rm quote zsh git tmux gdb vim gpg
 
@@ -98,9 +104,9 @@ vim_ycm: vim vim_ycm_check python
 	cd ~/.vim/bundle/YouCompleteMe && ./install.py --clang-completer # --force-sudo if root
 	@echo '*** YouCompleteMe setup ! ***'
 
-##!    all     : do all of the above in order
-.PHONY: all
-all: most vim_ycm
+##!    all     : do all of the above in order (skipping non-linux items)
+.PHONY: linux
+linux: most vim_ycm
 
 ##!    help    : print this helpful message
 .PHONY: help

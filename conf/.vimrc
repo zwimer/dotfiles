@@ -7,7 +7,7 @@ set encoding=utf-8
 " Set the tex flavor
 let g:tex_flavor = 'tex'
 
-set nocompatible " be iMproved
+set nocompatible " be iMproved (set most everything after this, it resets a lot of options)
 filetype off     " for vundle, set on later
 
 " Set the runtime path to include Vundle and initialize
@@ -44,6 +44,9 @@ endif
 call vundle#end()            " required
 filetype plugin indent on    " required
 
+
+" Vim info file
+set viminfo+=n~/.vim/viminfo
 
 " Show information
 set number

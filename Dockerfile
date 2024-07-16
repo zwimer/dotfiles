@@ -19,5 +19,5 @@ RUN chown -R user:user .
 USER user
 
 # Build
-ARG TARGET=all
+ARG TARGET=linux
 RUN make "${TARGET}"
