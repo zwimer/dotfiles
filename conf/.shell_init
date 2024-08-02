@@ -22,15 +22,12 @@ export DOCKER_CLI_HINTS=false
 export DOCKER_BUILDKIT=1
 export LESSHISTFILE=-
 
-# ------------------- OS Specific First -------------------
+# ------------------- General purpose -------------------
 
+# Env
 if [[ "${OSTYPE}" == 'darwin'* ]]; then
-	# Brew
-	export HOMEBREW_NO_ANALYTICS=1
 	eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
-
-# ------------------- General purpose -------------------
 
 # Default flags
 alias g++='g++ -Wall -Wextra -std=c++17'
@@ -41,7 +38,11 @@ alias cling='cling --std=c++17'
 alias ls='ls --color'
 alias vim='vim -p'
 alias mv='mv -i'
-alias cp='cp -i'
+alias cp='cp -i --preserve=mode'  # --preserve=mode because GNU cp needs this to clonefile on macOS
+alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.mypy_cache,__pycache__}"
+if [ -d "${HOME}/.cache" ]; then
+	alias wget='wget --hsts-file=~/.cache/wget-hsts'
+fi
 
 # New commands
 alias g='git'
@@ -145,6 +146,11 @@ if [ "${?}" -eq 0 ]; then
 	fi
 fi
 
+# Warnings
+if [ -f "${HOME}/.profile" ]; then
+	echo "Warning: ~/.profile exists"
+fi
+
 # Useful functions
 function stopwatch() {
 	local C=1
@@ -164,12 +170,9 @@ function beep() {
 
 # ------------------- OS Specific -------------------
 
-# Temp vars
-SI_GREP_ARGS="--color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.mypy_cache,__pycache__}"
+if [[ "${OSTYPE}" == 'darwin'* ]]; then
+	export HOMEBREW_NO_ANALYTICS=1
 
-if [[ "${OSTYPE}" != 'darwin'* ]]; then
-	alias grep="grep ${SI_GREP_ARGS}"
-else
 	# Aliases
 	alias lsregister="/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister"
 
@@ -207,15 +210,13 @@ else
 	alias google-chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 
 	# GNU
+	export PATH="/opt/homebrew/Cellar/coreutils/9.5/libexec/gnubin:${PATH}"  # Also sets cp b/c BSD cp is weird
 	export PATH="/opt/homebrew/Cellar/libtool/2.4.7/libexec/gnubin:${PATH}"
-	export PATH="/opt/homebrew/Cellar/coreutils/9.5/libexec/gnubin:${PATH}"
 	export PATH="/opt/homebrew/Cellar/gnu-tar/1.35/libexec/gnubin:${PATH}"
 	export PATH="/opt/homebrew/Cellar/grep/3.11/libexec/gnubin:${PATH}"
 	export PATH="/opt/homebrew/Cellar/gnu-sed/4.9/libexec/gnubin:${PATH}"
 	export PATH="/opt/homebrew/Cellar/make/4.4.1/libexec/gnubin:${PATH}"
 	export PATH="/opt/homebrew/Cellar/findutils/4.10.0/libexec/gnubin:${PATH}"
-	alias grep="ggrep ${SI_GREP_ARGS}" # Explicitly ggrep b/c args are cross platform
-	alias cp="gcp -i" # Explicitly gcp, not cp; because cp -R a/ b differs on BSD cp
 
 	# Bat
 	export BAT_THEME="ansi"
@@ -234,8 +235,6 @@ else
 		export PATH="${HOMEBREW_PREFIX}/opt/ccache/libexec:${PATH}"
 	fi
 fi
-
-unset SI_GREP_ARGS
 
 # ------------------- After OS Specific Aliases -------------------
 
