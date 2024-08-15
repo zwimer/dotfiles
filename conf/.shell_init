@@ -24,6 +24,9 @@ export LESSHISTFILE=-
 
 # ------------------- General purpose -------------------
 
+# Config
+tabs -4
+
 # Env
 if [[ "${OSTYPE}" == 'darwin'* ]]; then
 	eval "$(/opt/homebrew/bin/brew shellenv)"
