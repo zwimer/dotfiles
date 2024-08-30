@@ -87,3 +87,6 @@ git config --global alias.undo "reset head@{0}"
 
 # Help
 git config --global alias.aliases "config --get-regexp '^alias\.'"
+
+# Tabs
+git config --global core.pager "less --tabs 4"
