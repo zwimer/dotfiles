@@ -9,7 +9,6 @@ if [ "$?" -eq 0 ] && [[ "$OSTYPE" == "linux"* ]]; then
 		function update_ssh_auth_sock() {
 			local TO_EXPORT="$(tmux show-environment | grep '^SSH_AUTH_SOCK=')"
 			if [ -n "${TO_EXPORT}" ]; then
-				echo export "${TO_EXPORT}"
 				export "${TO_EXPORT}"
 			fi
 		}
