@@ -16,8 +16,9 @@ git config --global user.signingkey "${KEYFILE}"
 
 # Core
 touch ~/.gitignore
-if [ -f /usr/bin/vim ]; then
-	git config --global editor /usr/bin/vim
+command -v vim > /dev/null
+if [ "$?" -eq 0 ]; then
+	git config --global core.editor "$(which vim)"
 fi
 git config --global core.excludesfile ~/.gitignore
 git config --global core.eautocrlf input
@@ -25,6 +26,7 @@ git config --global core.safecrlf true
 
 # Behavior
 git config --global push.default simple
+git config --global push.autoSetupRemote true
 git config --global pull.rebase true
 git config --global credential.helper store
 git config --global blame.markUnblamableLines true

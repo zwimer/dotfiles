@@ -5,43 +5,41 @@
 .PHONY: shell
 shell:
 	./scripts/append.sh file ./conf/.shell_init ~/.shell_init
-	./scripts/append.sh str "source ~/.shell_init" ~/.bashrc
-	./scripts/append.sh str "source ~/.shell_init" ~/.zshrc
+	@echo '*** ~/.shell_init setup ! ***'
 
 ##!    python  : install python, pip, virtualenvwrapper, and edit .shell_init
 .PHONY: python
 python: shell
 	./scripts/pkg.sh install_if2 apt apt-get python3-pip virtualenvwrapper
 	./scripts/pkg.sh install_if2 dnf yum     python3-pip python3-virtualenvwrapper
-	./scripts/py_exports.sh
+	@echo '*** python setup ! ***'
 
-##!    rm      : install delayed_rm
-.PHONY: rm
-rm: shell python
-	./scripts/install_delayed_rm.sh
+##!    cli     : install the venv cli including: delayed_rm, quote, etc.
+.PHONY: cli
+cli: shell python
+	bash -c 'source ~/.shell_init && mkvirtualenv cli && set -eux \
+		&& pip3 install -U pip && pip3 install -U delayed_rm quote_lines rpipe sigsleep'
+	@echo '*** cli setup ! ***'
 
-##!    quote   : install quote
-.PHONY: quote
-quote: shell python
-	./scripts/install_quote.sh
-
-.PHONY: basic_zsh
-basic_zsh: shell
-	./scripts/pkg.sh install zsh
-	./scripts/append.sh file ./conf/.zshrc ~/.zshrc
-	./scripts/omz.sh
-	@echo '*** basic zsh setup ! ***'
+##!    bash    : configure ~/.bashrc
+.PHONY: bash
+bash: cli
+	./scripts/append.sh str "source ~/.shell_init" ~/.bashrc
+	@echo '*** bash setup ! ***'
 
 ##!    zsh     : install zsh, oh-my-zsh, and plugins, and configure them (also installs fzf and tree)
 .PHONY: zsh
-zsh: basic_zsh
-	./scripts/pkg.sh install fzf tree
+zsh: cli
+	./scripts/pkg.sh install zsh fzf tree
+	./scripts/append.sh file ./conf/.zshrc ~/.zshrc
+	./scripts/omz.sh
+	./scripts/append.sh str "source ~/.shell_init" ~/.zshrc
 	@echo '*** zsh setup ! ***'
 
 ##!    git     : setup git aliases
 .PHONY: git
 git:
-	@echo "Assuming git exists..."
+	./scripts/pkg.sh install git vim
 	./scripts/append.sh file ./conf/.gitignore ~/.gitignore
 	./scripts/git_config.sh
 	@echo '*** git setup ! ***'
@@ -50,7 +48,6 @@ git:
 .PHONY: tmux
 tmux:
 	./scripts/pkg.sh install tmux
-	./scripts/append.sh file ./data/tmux_ssh ~/.shell_init
 	./scripts/append.sh file ./conf/.tmux.conf ~/.tmux.conf
 	git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm || true
 	tmux new-session -d 'tmux source ~/.tmux.conf && ~/.tmux/plugins/tpm/scripts/install_plugins.sh'
@@ -67,7 +64,7 @@ gdb:
 
 ##!    lldb     : configure lldb
 .PHONY: lldb
-gdb:
+lldb:
 	./scripts/append.sh file ./conf/.lldbinit ~/.lldbinit
 	@echo '*** lldb setup ! ***'
 
@@ -77,12 +74,12 @@ vim: shell
 	./scripts/pkg.sh install vim
 	./scripts/default_vim.sh
 	mkdir -v -p ~/.vim/colors
-	./scripts/append.sh file ./conf/github.vim ~/.vim/colors/github.vim '" '
+	mv ./conf/github.vim ~/.vim/colors/github.vim
 	./scripts/append.sh file ./conf/.vimrc ~/.vimrc '" '
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim || true
 	vim +PluginInstall +qall
 	mkdir -p ~/.vim/after/
-	./scripts/append.sh file ./conf/gutter.vim ~/.vim/after/gutter.vim '" '
+	echo "GitGutterEnable" > ~/.vim/after/gutter.vim
 	@echo '*** vim setup ! ***'
 
 ##!    gpg     : install gpg
@@ -90,15 +87,18 @@ vim: shell
 gpg: shell
 	./scripts/pkg.sh install gnupg
 	mkdir -m 700 ~/.gnupg || true
-	./scripts/append.sh file ./conf/.gnupg/gpg.conf ~/.gnupg/gpg.conf
+	./scripts/append.sh file ./conf/gpg.conf ~/.gnupg/gpg.conf
+	@echo '*** gpg setup ! ***'
 
 ##!    most    : do most of the above in order
 .PHONY: most
-most: shell python rm quote zsh git tmux gdb vim gpg
+most: shell python bash zsh git gpg tmux vim
 
 ##!    vim_ycm : install the vim plugin YouCompleteMe
 .PHONY: vim_ycm
-vim_ycm: vim vim_ycm_check python
+vim_ycm: vim python
+	[ "$(MEMORY)" -ge 2000000 ] \
+		|| (echo "*** Insufficient memory. You need at least 2GB! ***"; exit 1)
 	./scripts/pkg.sh install_if2 apt apt-get cmake python3-dev   build-essential
 	./scripts/pkg.sh install_if2 dnf yum     cmake python3-devel gcc-c++ make
 	sed -i "s|\" Plugin 'Valloric/YouCompleteMe'| Plugin 'Valloric/YouCompleteMe'|g" ~/.vimrc
@@ -106,20 +106,17 @@ vim_ycm: vim vim_ycm_check python
 	cd ~/.vim/bundle/YouCompleteMe && ./install.py --clang-completer # --force-sudo if root
 	@echo '*** YouCompleteMe setup ! ***'
 
-##!    all     : do all of the above in order (skipping non-linux items)
+##!    linux   : do all of the above in order (skipping non-linux items)
 .PHONY: linux
 linux: most vim_ycm
 
 ##!    help    : print this helpful message
 .PHONY: help
 help:
-	@echo ""
-	@echo "make options:"
+	@echo $$'\n'"make options:"
 	@sed -n 's/^##!//p' < ./Makefile
 	@echo ""
 
-### Private helpers
+# Constants
 
-.PHONY: vim_ycm_check
-vim_ycm_check:
-	./scripts/vim_ycm_chk.sh
+MEMORY = $$(cat /proc/meminfo | grep MemTotal | awk '{ print $$2 }')

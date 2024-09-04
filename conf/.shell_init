@@ -1,5 +1,19 @@
 # Read by all shells
 
+# Drop into a tmux terminal if ssh-ing
+command -v tmux > /dev/null
+if [ "$?" -eq 0 ] && [[ "$OSTYPE" == "linux"* ]]; then
+	if [ -z "${TMUX}" ] && [ -n "${SSH_CONNECTION}" ]; then
+		tmux attach -t default || tmux new -s default
+	elif [ -n "${TMUX}" ]; then
+		# Refresh ssh agent forward before invoking sudo
+		function sudo() {
+			export $(tmux show-environment | grep '^SSH_AUTH_SOCK=');
+			/usr/bin/sudo "$@"
+		}
+	fi
+fi
+
 # ------------------- Exports -------------------
 
 # General
@@ -21,6 +35,10 @@ export DOCKER_SCAN_SUGGEST=false
 export DOCKER_CLI_HINTS=false
 export DOCKER_BUILDKIT=1
 export LESSHISTFILE=-
+command -v vim > /dev/null
+if [ "${?}" -eq 0 ]; then
+	export EDITOR="vim -p"
+fi
 
 # ------------------- General purpose -------------------
 
@@ -30,6 +48,7 @@ tabs -4
 # Env
 if [[ "${OSTYPE}" == 'darwin'* ]]; then
 	eval "$(/opt/homebrew/bin/brew shellenv)"
+	hash -r
 fi
 
 # Default flags
@@ -66,37 +85,44 @@ alias search='find . | grep -i'
 function search2() { (set -u; grep -irl "${1}" .); }
 
 # Avoid accidents
-function pip() {
-	if [[ -z "${VIRTUAL_ENV}" && "$#" -ge 1 && "$1" == "install" ]]; then
-		echo "Error: Do not use pip outside of a virtualenv"
-		return 1
-	else
-		\pip3 "${@}"
-	fi
-}
-alias pip3=pip
+command -v pip > /dev/null
+if [ "${?}" -eq 0 ]; then
+	function pip() {
+		if [[ -z "${VIRTUAL_ENV}" && "$#" -ge 1 && "$1" == "install" ]]; then
+			echo "Error: Do not use pip outside of a virtualenv"
+			return 1
+		else
+			\pip3 "${@}"
+		fi
+	}
+	alias pip3=pip
+fi
 
 # Configuration virtualenv
-export WORKON_HOME="${HOME}/.virtualenvs"
-command -v virtualenvwrapper.sh > /dev/null
+command -v python3 > /dev/null
 if [ "${?}" -eq 0 ]; then
-	export PROJECT_HOME="${HOME}/.mkproject_projects"
-	if [[ "${OSTYPE}" == 'darwin'* ]]; then  # macOS
-		export VIRTUALENVWRAPPER_PYTHON="${HOMEBREW_PREFIX}/bin/python3"
-		export VIRTUALENVWRAPPER_VIRTUALENV="${HOMEBREW_PREFIX}/bin/virtualenv"
-		source "${HOMEBREW_PREFIX}/bin/virtualenvwrapper_lazy.sh"
-	else  # Linux
-		export VIRTUALENVWRAPPER_PYTHON="/usr/bin/python3"
-		export VIRTUALENVWRAPPER_VIRTUALENV="/usr/bin/virtualenv"
-		[[ -f "/usr/bin/virtualenvwrapper_lazy.sh" ]] \
-			&& source "/usr/bin/virtualenvwrapper_lazy.sh" \
-			|| source "/usr/share/virtualenvwrapper/virtualenvwrapper_lazy.sh"
+	command -v virtualenv > /dev/null
+	if [ "${?}" -eq 0 ]; then
+		if [ "${?}" -eq 0 ]; then
+			export WORKON_HOME="${HOME}/.virtualenvs"
+			export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
+			export VIRTUALENVWRAPPER_VIRTUALENV="$(which virtualenv)"
+		fi
+		for _VENV_DIR_CHK in "/usr/bin" "/opt/homebrew/bin" "/usr/share/virtualenvwrapper"; do
+			if [ -f "${_VENV_DIR_CHK}/virtualenvwrapper_lazy.sh" ]; then
+				source "${_VENV_DIR_CHK}/virtualenvwrapper_lazy.sh"
+				hash -r
+				break
+			fi
+		done
+		unset _VENV_DIR_CHK
 	fi
 fi
 
 # virtualenv: cli
 if [ -d "${WORKON_HOME}/cli/bin/" ]; then
 	export PATH="${PATH}:${WORKON_HOME}/cli/bin/"
+	hash -r
 fi
 command -v delayed_rm > /dev/null
 if [ "${?}" -eq 0 ]; then
@@ -220,6 +246,7 @@ if [[ "${OSTYPE}" == 'darwin'* ]]; then
 	export PATH="/opt/homebrew/Cellar/gnu-sed/4.9/libexec/gnubin:${PATH}"
 	export PATH="/opt/homebrew/Cellar/make/4.4.1/libexec/gnubin:${PATH}"
 	export PATH="/opt/homebrew/Cellar/findutils/4.10.0/libexec/gnubin:${PATH}"
+	hash -r
 
 	# Bat
 	export BAT_THEME="ansi"

@@ -33,5 +33,4 @@ if [[ -n "${YUM}" ]]; then
 	) || true
 fi
 ./pkg.sh install_if2 dnf yum vim-default-editor
-./append.sh str "export EDITOR='${VIM}'" ~/.shell_init
 git config --global core.editor "${VIM}"
