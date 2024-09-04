@@ -6,9 +6,17 @@ if [ "$?" -eq 0 ] && [[ "$OSTYPE" == "linux"* ]]; then
 	if [ -z "${TMUX}" ] && [ -n "${SSH_CONNECTION}" ]; then
 		tmux attach -t default || tmux new -s default
 	elif [ -n "${TMUX}" ]; then
+		function update_ssh_auth_sock() {
+			local TO_EXPORT="$(tmux show-environment | grep '^SSH_AUTH_SOCK=')"
+			if [ -n "${TO_EXPORT}" ]; then
+				echo export "${TO_EXPORT}"
+				export "${TO_EXPORT}"
+			fi
+		}
+		update_ssh_auth_sock
 		# Refresh ssh agent forward before invoking sudo
 		function sudo() {
-			export $(tmux show-environment | grep '^SSH_AUTH_SOCK=');
+			update_ssh_auth_sock
 			/usr/bin/sudo "$@"
 		}
 	fi
