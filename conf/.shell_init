@@ -32,6 +32,9 @@ export LANG='en_US.UTF-8'
 export HISTSIZE=1000000000
 export SAVEHIST=1000000000
 export HISTFILESIZE=1000000000
+if [ -n "${BASH+x}" ]; then
+	HISTTIMEFORMAT="%F %T "
+fi
 
 # App config
 if [ ! -z "${ZSH+x}" ] && [ ! -z "${HOST+x}" ]; then
