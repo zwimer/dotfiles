@@ -23,6 +23,7 @@ fi
 git config --global core.excludesfile ~/.gitignore
 git config --global core.eautocrlf input
 git config --global core.safecrlf true
+git config --global core.pager "less --tabs 4"
 
 # Behavior
 git config --global push.default simple
@@ -89,6 +90,3 @@ git config --global alias.undo "reset head@{0}"
 
 # Help
 git config --global alias.aliases "config --get-regexp '^alias\.'"
-
-# Tabs
-git config --global core.pager "less --tabs 4"
