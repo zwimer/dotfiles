@@ -76,14 +76,15 @@ alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.
 if [ -d "${HOME}/.cache" ]; then
 	alias wget='wget --hsts-file=~/.cache/wget-hsts'
 fi
-alias pva='pv -petab'
 
 # New commands
 alias g='git'
 alias la='ls -lA'
-alias untar='tar --same-owner -xvf'
+alias pva='pv -petab'
 alias ctar='tar czvpf'
+alias neofetch='neowofetch'
 alias today='date "+%-m-%-d"'
+alias untar='tar --same-owner -xvf'
 alias encrypt-gpg='gpg --symmetric --no-symkey-cache --cipher-algo AES256'
 function get_host() { cat /etc/hosts | grep -i "$1"; }
 function encrypt() { gpg --symmetric --no-symkey-cache --cipher-algo AES256 -o "$1".gpg "$1"; }
@@ -212,7 +213,12 @@ function beep() {
 # ------------------- OS Specific -------------------
 
 if [[ "${OSTYPE}" == 'darwin'* ]]; then
+
+	# Brew
+	export HOMEBREW_NO_INSTALL_UPGRADE=1
 	export HOMEBREW_NO_ANALYTICS=1
+	export HOMEBREW_NO_ENV_HINTS=1
+	export HOMEBREW_BAT=1
 
 	# Aliases
 	alias lsregister="/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister"
@@ -240,6 +246,7 @@ if [[ "${OSTYPE}" == 'darwin'* ]]; then
 	alias fix-audio="ps aux | grep 'coreaudio[d]' | awk '{print \$2}' | xargs sudo kill"
 	alias fix-sudo="sudo gsed -i '2 i auth       sufficient     pam_tid.so' /etc/pam.d/sudo"
 	alias fix-zt='sudo bash -c "launchctl unload /Library/LaunchDaemons/com.zerotier.one.plist; launchctl load /Library/LaunchDaemons/com.zerotier.one.plist"'
+	alias fix-window-server="sudo killall -HUP WindowServer"
 
 	# Switches
 	alias crashreport-on="sudo defaults write com.apple.CrashReporter DialogType crashreport"
