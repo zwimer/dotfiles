@@ -43,6 +43,7 @@ git config --global color.decorate.tag blue
 
 # Diff
 git config --global diff.mnemonicPrefix true
+git config --global diff.wsErrorHighlight all
 git config --global diff.colorMoved zebra
 git config --global diff.colormovedws allow-indentation-change
 
