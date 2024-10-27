@@ -1,9 +1,7 @@
 #!/bin/sh -eux
 
 
-# User
-git config --global user.name zwimer
-git config --global user.email github@zwimer.com
+# Signing
 SSHDIR="${HOME}/.ssh"
 if [ ! -d "${SSHDIR}" ]; then
 	mkdir -m 700 "${SSHDIR}"
@@ -13,6 +11,12 @@ if [ ! -f "${KEYFILE}" ]; then
 	ssh-keygen -t ed25519 -o -a 150 -C "$(whoami)_$(uname -n)_GitSigningKey" -N "" -f "${KEYFILE}"
 fi
 git config --global user.signingkey "${KEYFILE}"
+git config --global tag.forceSignAnnotated true
+git config --global gpg.format ssh
+
+# User
+git config --global user.name zwimer
+git config --global user.email github@zwimer.com
 
 # Core
 touch ~/.gitignore
@@ -25,19 +29,22 @@ git config --global core.eautocrlf input
 git config --global core.safecrlf true
 git config --global core.pager "less --tabs 4"
 
-# Behavior
+# Misc behaviors
 git config --global push.default simple
 git config --global push.autoSetupRemote true
 git config --global pull.rebase true
 git config --global credential.helper store
 git config --global blame.markUnblamableLines true
 git config --global branch.sort -comitterdate
-git config --global gpg.format ssh
 
 # Color
 git config --global color.ui auto
 git config --global color.decorate.tag blue
+
+# Diff
+git config --global diff.mnemonicPrefix true
 git config --global diff.colorMoved zebra
+git config --global diff.colormovedws allow-indentation-change
 
 #
 # Aliases
