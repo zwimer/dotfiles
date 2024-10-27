@@ -25,7 +25,7 @@ if [ "$?" -eq 0 ]; then
 	git config --global core.editor "$(which vim)"
 fi
 git config --global core.excludesfile ~/.gitignore
-git config --global core.eautocrlf input
+git config --global core.autocrlf input
 git config --global core.safecrlf true
 git config --global core.pager "less --tabs 4"
 
