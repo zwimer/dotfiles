@@ -12,6 +12,7 @@ if [ ! -f "${KEYFILE}" ]; then
 fi
 git config --global user.signingkey "${KEYFILE}"
 git config --global tag.forceSignAnnotated true
+git config --global commit.gpgsign true
 git config --global gpg.format ssh
 
 # User
