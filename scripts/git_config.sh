@@ -1,7 +1,15 @@
 #!/bin/sh -eux
 
 
-# Signing
+# Env
+EMAIL="github@zwimer.com"
+SSHDIR="${HOME}/.ssh"
+KEYFILE="${SSHDIR}/GitSigningKey"
+GIT_CDIR="${HOME}/.config/git"
+ALLOWED_SIGNERS="${GIT_CDIR}/allowed_signers"
+
+
+# Signing key
 SSHDIR="${HOME}/.ssh"
 if [ ! -d "${SSHDIR}" ]; then
 	mkdir -m 700 "${SSHDIR}"
@@ -10,6 +18,16 @@ KEYFILE="${SSHDIR}/GitSigningKey"
 if [ ! -f "${KEYFILE}" ]; then
 	ssh-keygen -t ed25519 -o -a 150 -C "$(whoami)_$(uname -n)_GitSigningKey" -N "" -f "${KEYFILE}"
 fi
+
+# Allowed signers file
+mkdir -p -m 755 "$GIT_CDIR"
+touch "${ALLOWED_SIGNERS}"
+chmod 644 "${ALLOWED_SIGNERS}"
+echo -n "${EMAIL} " > "${ALLOWED_SIGNERS}"
+cat "${KEYFILE}.pub" >> "${ALLOWED_SIGNERS}"
+
+# Signing config
+git config --global gpg.ssh.allowedSignersFile "${ALLOWED_SIGNERS}"
 git config --global user.signingkey "${KEYFILE}"
 git config --global tag.forceSignAnnotated true
 git config --global commit.gpgsign true
@@ -17,7 +35,7 @@ git config --global gpg.format ssh
 
 # User
 git config --global user.name zwimer
-git config --global user.email github@zwimer.com
+git config --global user.email "$EMAIL"
 
 # Core
 touch ~/.gitignore
