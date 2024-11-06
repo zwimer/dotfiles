@@ -8,7 +8,6 @@ KEYFILE="${SSHDIR}/GitSigningKey"
 GIT_CDIR="${HOME}/.config/git"
 ALLOWED_SIGNERS="${GIT_CDIR}/allowed_signers"
 
-
 # Signing key
 SSHDIR="${HOME}/.ssh"
 if [ ! -d "${SSHDIR}" ]; then
@@ -25,6 +24,9 @@ touch "${ALLOWED_SIGNERS}"
 chmod 644 "${ALLOWED_SIGNERS}"
 echo -n "${EMAIL} " > "${ALLOWED_SIGNERS}"
 cat "${KEYFILE}.pub" >> "${ALLOWED_SIGNERS}"
+
+# git LFS
+git lfs install
 
 # Signing config
 git config --global gpg.ssh.allowedSignersFile "${ALLOWED_SIGNERS}"

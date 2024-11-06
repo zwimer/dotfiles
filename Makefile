@@ -36,10 +36,10 @@ zsh: cli
 	./scripts/append.sh str "source ~/.shell_init" ~/.zshrc
 	@echo '*** zsh setup ! ***'
 
-##!    git     : setup git aliases
+##!    git     : setup git
 .PHONY: git
 git:
-	./scripts/pkg.sh install git vim
+	./scripts/pkg.sh install vim git git-lfs
 	./scripts/append.sh file ./conf/.gitignore ~/.gitignore
 	./scripts/git_config.sh
 	@echo '*** git setup ! ***'
