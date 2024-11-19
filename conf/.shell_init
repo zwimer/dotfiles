@@ -85,6 +85,7 @@ alias ctar='tar czvpf'
 alias neofetch='neowofetch'
 alias today='date "+%-m-%-d"'
 alias untar='tar --same-owner -xvf'
+alias wdiff='git diff --no-index --word-diff'
 alias encrypt-gpg='gpg --symmetric --no-symkey-cache --cipher-algo AES256'
 function get_host() { cat /etc/hosts | grep -i "$1"; }
 function encrypt() { gpg --symmetric --no-symkey-cache --cipher-algo AES256 -o "$1".gpg "$1"; }
