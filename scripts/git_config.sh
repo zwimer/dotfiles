@@ -56,7 +56,7 @@ git config --global push.autoSetupRemote true
 git config --global pull.rebase true
 git config --global credential.helper store
 git config --global blame.markUnblamableLines true
-git config --global branch.sort -comitterdate
+git config --global branch.sort -committerdate
 
 # Color
 git config --global color.ui auto
