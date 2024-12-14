@@ -59,6 +59,9 @@ set wildmenu
 filetype on
 filetype indent on
 syntax on
+set list
+set listchars=tab:\ \ ┊,extends:…,precedes:…
+" set listchars=eol:↓,tab:\ \ ┊,trail:●,extends:…,precedes:…,space:·
 
 " Auto indent
 set autoindent
@@ -84,7 +87,7 @@ set mouse=a
 " Map l to @q
 nnoremap l @q
 
-" Remap U to u
+" Remap U to u due to accidents
 nnoremap U u
 
 " Remap shift up to up
