@@ -108,6 +108,7 @@ git config --global alias.f "fetch"
 git config --global alias.d "diff"
 git config --global alias.changed "show"
 git config --global alias.staged "diff --staged"
+git config --global alias.wdiff "diff --word-diff=color"
 
 # Rebase
 git config --global alias.r "rebase"
