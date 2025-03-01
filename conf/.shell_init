@@ -182,7 +182,7 @@ if [ "${?}" -eq 0 ]; then
 			source "${HOMEBREW_PREFIX}/opt/fzf/shell/completion.zsh"
 			source "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh"
 		elif [[ "$(grep ^ID= /etc/os-release)" == ID=fedora ]]; then
-			source /usr/share/zsh/site-functions/fzf  # Do not autoload this
+			source /usr/share/zsh/site-functions/_fzf  # Do not autoload this
 			source /usr/share/fzf/shell/key-bindings.zsh
 		fi
 		# Not loading for ubuntu b/c bug: https://github.com/junegunn/fzf/issues/2790
