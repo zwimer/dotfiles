@@ -42,6 +42,7 @@ if [ ! -z "${ZSH+x}" ] && [ ! -z "${HOST+x}" ]; then
 fi
 export FFSEND_HOST='https://send.zwimer.com/'
 export LS_COLORS="rs=0:di=01;34:ln=01;35:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=01;37;41:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;31:"
+export LSCOLORS="ExFxCxDxBxegedabagacad"
 export DOCKER_SCAN_SUGGEST=false
 export DOCKER_CLI_HINTS=false
 export DOCKER_BUILDKIT=1
@@ -222,6 +223,7 @@ if [[ "${OSTYPE}" == 'darwin'* ]]; then
 	export HOMEBREW_BAT=1
 
 	# Aliases
+	alias tailscale='/Applications/Tailscale.app/Contents/MacOS/Tailscale'
 	alias lsregister="/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister"
 
 	# Checks
@@ -259,14 +261,17 @@ if [[ "${OSTYPE}" == 'darwin'* ]]; then
 	alias google-chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 
 	# GNU
-	export PATH="/opt/homebrew/Cellar/coreutils/9.5/libexec/gnubin:${PATH}"  # Also sets cp b/c BSD cp is weird
-	export PATH="/opt/homebrew/Cellar/libtool/2.4.7/libexec/gnubin:${PATH}"
-	export PATH="/opt/homebrew/Cellar/gnu-tar/1.35/libexec/gnubin:${PATH}"
-	export PATH="/opt/homebrew/Cellar/grep/3.11/libexec/gnubin:${PATH}"
-	export PATH="/opt/homebrew/Cellar/gnu-sed/4.9/libexec/gnubin:${PATH}"
-	export PATH="/opt/homebrew/Cellar/make/4.4.1/libexec/gnubin:${PATH}"
-	export PATH="/opt/homebrew/Cellar/findutils/4.10.0/libexec/gnubin:${PATH}"
-	hash -r
+	function _add_gnu_paths() {
+		local NAME=""
+		for NAME in coreutils libtool gnu-tar grep gnu-sed make findutils; do
+			local BASE="/opt/homebrew/Cellar/${NAME}"
+			local VER="$(/bin/ls "${BASE}/" 2> /dev/null | /usr/bin/tail -n 1)"
+			[[ -n "$VER" ]] && export PATH="${BASE}/${VER}/libexec/gnubin:${PATH}"
+		done
+		hash -r
+	}
+	_add_gnu_paths
+	unset _add_gnu_paths
 
 	# Bat
 	export BAT_THEME="ansi"
