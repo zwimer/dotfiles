@@ -119,4 +119,4 @@ help:
 
 # Constants
 
-MEMORY = $$(cat /proc/meminfo | grep MemTotal | awk '{ print $$2 }')
+MEMORY = $$(grep MemTotal /proc/meminfo | sed -r 's/.* ([0-9]+) .*/\1/')
