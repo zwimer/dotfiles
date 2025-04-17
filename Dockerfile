@@ -7,7 +7,7 @@ RUN chmod 0640 /etc/shadow
 # Install dependencies (we use pkg for ease but manual is fine too)
 COPY ./scripts/pkg.sh /bin/pkg
 RUN pkg install git make sudo curl
-RUN pkg install_if2 dnf yum which
+RUN pkg install_if2 dnf yum which awk
 
 # Copy over required items
 COPY . /dotfiles
