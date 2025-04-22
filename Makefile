@@ -19,6 +19,7 @@ python: shell
 cli: shell python
 	bash -c 'source ~/.shell_init && mkvirtualenv cli && set -eux \
 		&& pip3 install -U pip && pip3 install -U delayed_rm quote_lines rpipe sigsleep'
+	./scripts/argcomplete.sh
 	@echo '*** cli setup ! ***'
 
 ##!    bash    : configure ~/.bashrc
