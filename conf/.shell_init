@@ -2,7 +2,7 @@
 
 # Drop into a tmux terminal if ssh-ing
 command -v tmux > /dev/null
-if [ "$?" -eq 0 ] && [[ "$OSTYPE" == "linux"* ]]; then
+if [ "$?" -eq 0 ] && [[ "$OSTYPE" == "linux"* ]] && [ -z "$SKIP_TMUX" ]; then
 	if [ -z "${TMUX}" ] && [ -n "${SSH_CONNECTION}" ]; then
 		tmux attach -t default || tmux new -s default
 	elif [ -n "${TMUX}" ]; then
