@@ -1,73 +1,54 @@
+# shellcheck disable=SC1090,SC1091,SC2034
 # Read by all shells
 
 # Drop into a tmux terminal if ssh-ing
-command -v tmux > /dev/null
-if [ "$?" -eq 0 ] && [[ "$OSTYPE" == "linux"* ]] && [[ "$-" == *i* ]] && [ -z "$SKIP_TMUX" ]; then
+if command -v tmux >/dev/null && [[ "$OSTYPE" == "linux"* ]] && [[ "$-" == *i* ]] && [ -z "$SKIP_TMUX" ]; then
 	if [ -z "${TMUX}" ] && [ -n "${SSH_CONNECTION}" ]; then
 		tmux attach -t default || tmux new -s default
 	elif [ -n "${TMUX}" ]; then
 		[ ! -f /etc/motd ] || cat /etc/motd
-		function update_ssh_auth_sock() {
-			local TO_EXPORT="$(tmux show-environment | grep '^SSH_AUTH_SOCK=')"
-			if [ -n "${TO_EXPORT}" ]; then
-				export "${TO_EXPORT}"
-			fi
-		}
-		update_ssh_auth_sock
-		# Refresh ssh agent forward before invoking sudo
-		function sudo() {
-			update_ssh_auth_sock
-			/usr/bin/sudo "$@"
-		}
+		function update_ssh_auth_sock() { source <(tmux show-environment | grep '^SSH_AUTH_SOCK='); }
+		function sudo() { update_ssh_auth_sock; /usr/bin/sudo "$@"; }
+		update_ssh_auth_sock  # Update now
 	fi
 fi
+
+# ------------------- Computer Specific -------------------
+
+
 
 # ------------------- Exports -------------------
 
 # General
-export GT='https://www.github.com/zwimer/'
 export LANG='en_US.UTF-8'
+export GT='https://www.github.com/zwimer/'
+[[ "$PATH" == *"$HOME/.local/bin"* ]] || export PATH="$HOME/.local/bin:$PATH"
 
 # History
 export HISTSIZE=1000000000
 export SAVEHIST=1000000000
 export HISTFILESIZE=1000000000
-if [ -n "${BASH+x}" ]; then
-	HISTTIMEFORMAT="%F %T "
-fi
+if [ -n "${BASH+x}" ]; then HISTTIMEFORMAT="%F %T "; fi
 
 # App config
-if [ ! -z "${ZSH+x}" ] && [ ! -z "${HOST+x}" ]; then
-	export ZSH_COMPDUMP="${ZSH}/cache/.zcompdump-${HOST}"
-fi
-if [ "$HOST" = Cryogenic ]; then
-	export FFSEND_HOST="http://localhost:1443"
-else
-	export FFSEND_HOST='https://send.zwimer.com/'
-fi
+export FFSEND_HOST='https://send.zwimer.com/'
+if [ "$HOST" = Cryogenic ]; then export FFSEND_HOST="http://localhost:1443"; fi
+if command -v vim >/dev/null; then export EDITOR="vim -p"; fi
+if [ -n "${ZSH+x}" ] && [ -n "${HOST+x}" ]; then export ZSH_COMPDUMP="${ZSH}/cache/.zcompdump-${HOST}"; fi
 export LS_COLORS="rs=0:di=01;34:ln=01;35:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=01;37;41:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;31:"
 export LSCOLORS="ExFxCxDxBxegedabagacad"
 export DOCKER_SCAN_SUGGEST=false
 export DOCKER_CLI_HINTS=false
 export DOCKER_BUILDKIT=1
 export LESSHISTFILE=-
-command -v vim > /dev/null
-if [ "${?}" -eq 0 ]; then
-	export EDITOR="vim -p"
-fi
 
 # ------------------- General purpose -------------------
 
-# Config
-if [[ "$-" == *i* ]]; then
-	tabs -4
-fi
+# Interactive config
+if [[ "$-" == *i* ]]; then tabs -4; fi
 
-# Env
-if [[ "${OSTYPE}" == 'darwin'* ]]; then
-	eval "$(/opt/homebrew/bin/brew shellenv)"
-	hash -r
-fi
+# Brew
+if [[ "${OSTYPE}" == 'darwin'* ]]; then eval "$(/opt/homebrew/bin/brew shellenv)"; hash -r; fi
 
 # Default flags
 alias g++='g++ -Wall -Wextra -std=c++17'
@@ -80,9 +61,7 @@ alias vim='vim -p'
 alias mv='mv -i'
 alias cp='cp -i --preserve=mode'  # --preserve=mode because GNU cp needs this to clonefile on macOS
 alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.mypy_cache,__pycache__}"
-if [ -d "${HOME}/.cache" ]; then
-	alias wget='wget --hsts-file=~/.cache/wget-hsts'
-fi
+if [ -d "${HOME}/.cache" ]; then alias wget='wget --hsts-file=~/.cache/wget-hsts'; fi
 
 # New commands
 alias g='git'
@@ -94,7 +73,7 @@ alias today='date "+%-m-%-d"'
 alias untar='tar --same-owner -xvf'
 alias wdiff='git diff --no-index --word-diff'
 alias encrypt-gpg='gpg --symmetric --no-symkey-cache --cipher-algo AES256'
-function get_host() { cat /etc/hosts | grep -i "$1"; }
+function get_host() { grep -i "$1" /etc/hosts; }
 function encrypt() { gpg --symmetric --no-symkey-cache --cipher-algo AES256 -o "$1".gpg "$1"; }
 
 # Quote
@@ -106,57 +85,40 @@ alias search='find . | grep -i'
 function search2() { (set -u; grep -irl "${1}" .); }
 
 # Avoid accidents
-command -v pip > /dev/null
-if [ "${?}" -eq 0 ]; then
+if command -v pip >/dev/null; then
 	function pip() {
-		if [[ -z "${VIRTUAL_ENV}" && "$#" -ge 1 && "$1" == "install" ]]; then
-			echo "Error: Do not use pip outside of a virtualenv"
+		if [ -z "${VIRTUAL_ENV}" ] && [ "$#" -ge 1 ] && [ "$1" == "install" ]; then
+			>&2 echo "Error: Do not use pip outside of a virtualenv"
 			return 1
-		else
-			\pip3 "${@}"
 		fi
+		\pip3 "${@}"
 	}
 	alias pip3=pip
 fi
 
 # Configuration virtualenv
-command -v python3 > /dev/null
-if [ "${?}" -eq 0 ]; then
-	command -v virtualenv > /dev/null
-	if [ "${?}" -eq 0 ]; then
-		if [ "${?}" -eq 0 ]; then
-			export WORKON_HOME="${HOME}/.virtualenvs"
-			export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
-			export VIRTUALENVWRAPPER_VIRTUALENV="$(which virtualenv)"
+if command -v python3 >/dev/null && command -v virtualenv >/dev/null; then
+	WORKON_HOME="${HOME}/.virtualenvs"
+	VIRTUALENVWRAPPER_PYTHON="$(which python3)"         # Might be overwritten below
+	VIRTUALENVWRAPPER_VIRTUALENV="$(which virtualenv)"  # Might be overwritten below
+	export WORKON_HOME VIRTUALENVWRAPPER_PYTHON VIRTUALENVWRAPPER_VIRTUALENV
+	for _VENV_DIR_CHK in "/usr/bin" "/opt/homebrew/bin" "/usr/share/virtualenvwrapper"; do
+		if [ -f "${_VENV_DIR_CHK}/virtualenvwrapper_lazy.sh" ]; then
+			source "${_VENV_DIR_CHK}/virtualenvwrapper_lazy.sh"
+			break
 		fi
-		for _VENV_DIR_CHK in "/usr/bin" "/opt/homebrew/bin" "/usr/share/virtualenvwrapper"; do
-			if [ -f "${_VENV_DIR_CHK}/virtualenvwrapper_lazy.sh" ]; then
-				source "${_VENV_DIR_CHK}/virtualenvwrapper_lazy.sh"
-				hash -r
-				break
-			fi
-		done
-		unset _VENV_DIR_CHK
-	fi
+	done
+	unset _VENV_DIR_CHK
 fi
 
 # virtualenv: cli
-if [ -d "${WORKON_HOME}/cli/bin/" ]; then
-	export PATH="${PATH}:${WORKON_HOME}/cli/bin/"
-	hash -r
-fi
-command -v delayed_rm > /dev/null
-if [ "${?}" -eq 0 ]; then
-	alias rm='delayed_rm'
-fi
-command -v sigsleep > /dev/null
-if [ "${?}" -eq 0 ]; then
-	alias sleep='sigsleep'
-fi
+if [ -d "${WORKON_HOME}/cli/bin/" ]; then export PATH="${PATH}:${WORKON_HOME}/cli/bin/"; fi
+hash -r
+if command -v delayed_rm >/dev/null; then alias rm='delayed_rm'; fi
+if command -v sigsleep >/dev/null; then alias sleep='sigsleep'; fi
 
 # fzf
-command -v fzf &> /dev/null
-if [ "${?}" -eq 0 ]; then
+if command -v fzf >/dev/null; then
 
 	# CTRL-/ to toggle small preview window to see the full command
 	# CTRL-Y to copy the command into clipboard using pbcopy
@@ -184,7 +146,7 @@ if [ "${?}" -eq 0 ]; then
 	}
 
 	# Auto completion and key bindings
-	if [[ -n "${ZSH_NAME}" ]]; then
+	if [ -n "${ZSH_NAME}" ]; then
 		if [[ "${OSTYPE}" == 'darwin'* ]]; then
 			source "${HOMEBREW_PREFIX}/opt/fzf/shell/completion.zsh"
 			source "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh"
@@ -197,59 +159,57 @@ if [ "${?}" -eq 0 ]; then
 fi
 
 # Warnings
-if [ -f "${HOME}/.profile" ]; then
-	echo "Warning: ~/.profile exists"
-fi
+if [ -f "${HOME}/.profile" ]; then >&2 echo "Warning: ~/.profile exists"; fi
 
 # Useful functions
 function stopwatch() {
-	local C=1
-	while true; do
-		sleep 1
-		echo "$C"
-		C="$((C+1))"
-	done
+	local C; C=1
+	while true; do sleep 1; echo "$C"; C="$((C+1))"; done
 }
 
 function beep() {
-	for i in {1.."$1"}; do
-		echo -ne '\007';
-		sleep .2
-	done
+	local i
+	for i in $(seq 1 5); do echo -ne '\007'; sleep .2; done
 }
 
 # ------------------- OS Specific -------------------
 
 if [[ "${OSTYPE}" == 'linux'* ]]; then
-	grep 'ID=fedora' /etc/os-release > /dev/null
-	if [ "${?}" -eq 0 ]; then
-		command -v prename &> /dev/null
-		if [ "${?}" -eq 0 ]; then
-			alias rename=prename
-		else
-			alias rename="echo 'dnf install prename to use perl rename for command: rename'"
-		fi
+	if grep 'ID=fedora' /etc/os-release >/dev/null; then
+		alias rename="echo 'dnf install prename to use perl rename for command: rename'"
+		if command -v prename >/dev/null; then alias rename=prename; fi
 	fi
+
+	# Functions
+	function btrfs_snapshot_diff() {
+		sudo btrfs send --no-data -p "$1" "$2" | mbuffer -m 50M | btrfs receive --dump
+	}
+
 elif [[ "${OSTYPE}" == 'darwin'* ]]; then
 
-	# Brew
-	export HOMEBREW_NO_INSTALL_UPGRADE=1
-	export HOMEBREW_NO_ANALYTICS=1
-	export HOMEBREW_NO_ENV_HINTS=1
+	# Env
 	export HOMEBREW_BAT=1
+	export HOMEBREW_NO_ENV_HINTS=1
+	export HOMEBREW_NO_ANALYTICS=1
+	export HOMEBREW_NO_INSTALL_UPGRADE=1
+	if [ -d ~/.local/bin/jet-brains/ ]; then export PATH="${PATH}:${HOME}/.local/bin/jet-brains/"; fi
+	if [ ! -f "${HOME}/.profile" ] && [ -f "${HOME}/.cargo/env" ]; then source "${HOME}/.cargo/env"; fi
+	if [ -f ~/.local/launchd/ssh-agent/env ]; then
+		source ~/.local/launchd/ssh-agent/env
+	else
+		>&2 echo "Warning: ssh-agent env file not found"
+	fi
 
 	# Aliases
-	alias tailscale='/Applications/Tailscale.app/Contents/MacOS/Tailscale'
 	alias lsregister="/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister"
 
 	# Checks
-	grep 'HISTSIZE=1000000000' /etc/zshrc > /dev/null 2> /dev/null
-	if [ "${?}" -ne 0 ]; then
-		echo "*** Set history settings in /etc/zshrc ! ***"
+	if ! grep 'HISTSIZE=1000000000' /etc/zshrc >/dev/null 2>/dev/null; then
+		>&2 echo "*** Set history settings in /etc/zshrc ! ***"
 	fi
 
 	# Help
-	if [[ -n "${ZSH_NAME}" ]]; then
+	if [ -n "${ZSH_NAME}" ]; then
 		unalias run-help 2> /dev/null
 		autoload run-help
 		HELPDIR=/usr/share/zsh/"${ZSH_VERSION}"/help
@@ -260,8 +220,12 @@ elif [[ "${OSTYPE}" == 'darwin'* ]]; then
 	alias gs="PATH='' gs"
 	alias python='python3'
 	export RSYNC_OLD_ARGS=1  # Until zsh fixes this: https://www.zsh.org/mla/workers/2022/msg00814.html
+	if [[ "${ZSH_VERSION:-5.9}" != "5.9" ]]; then
+		>&2 echo "Warning: Different zsh version; maybe finally use new rsync args?"
+	fi
 
 	# Fixers
+	# shellcheck disable=SC2142
 	alias fix-audio="ps aux | grep 'coreaudio[d]' | awk '{print \$2}' | xargs sudo kill"
 	alias fix-sudo="sudo gsed -i '2 i auth       sufficient     pam_tid.so' /etc/pam.d/sudo"
 	alias fix-zt='sudo bash -c "launchctl unload /Library/LaunchDaemons/com.zerotier.one.plist; launchctl load /Library/LaunchDaemons/com.zerotier.one.plist"'
@@ -273,16 +237,16 @@ elif [[ "${OSTYPE}" == 'darwin'* ]]; then
 
 	# Linux-ish
 	function ldd() { otool -L "${1}"; }
-	function ip() { ifconfig | grep inet | grep -v '::' | awk '{print $2}'; }
 	alias google-chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 
 	# GNU
 	function _add_gnu_paths() {
-		local NAME=""
+		local NAME BASE VER
+		NAME=""
 		for NAME in coreutils libtool gnu-tar grep gnu-sed make findutils; do
-			local BASE="/opt/homebrew/Cellar/${NAME}"
-			local VER="$(/bin/ls "${BASE}/" 2> /dev/null | /usr/bin/tail -n 1)"
-			[[ -n "$VER" ]] && export PATH="${BASE}/${VER}/libexec/gnubin:${PATH}"
+			BASE="/opt/homebrew/Cellar/${NAME}"
+			VER="$(/bin/ls "${BASE}/" 2> /dev/null | /usr/bin/tail -n 1)"
+			[ -n "$VER" ] && export PATH="${BASE}/${VER}/libexec/gnubin:${PATH}"
 		done
 		hash -r
 	}
@@ -294,18 +258,16 @@ elif [[ "${OSTYPE}" == 'darwin'* ]]; then
 	alias cat=bat
 
 	# New commands
+	# shellcheck disable=SC2164
 	function opend() { echo "$1"; cd "$1" && open-by-N.sh -i; cd -; }
-	function loudfail() {
-		set -E
-		trap 'echo FAIL' ERR
-	}
+	function loudfail() { set -E; trap 'echo FAIL' ERR; }
 
 	# ccache
-	command -v ccache &> /dev/null
-	if [ "${?}" -eq 0 ]; then
+	if command -v ccache >/dev/null; then
 		export PATH="${HOMEBREW_PREFIX}/opt/ccache/libexec:${PATH}"
 	fi
 fi
+hash -r
 
 # ------------------- After OS Specific Aliases -------------------
 
