@@ -3,34 +3,28 @@
 
 function root_do() {
 	local SUDO=
-	if [[ "${EUID}" -eq 0 ]]; then :;
-	elif sh -c "type sudo >/dev/null 2>/dev/null"; then
+	if [ "${EUID}" -ne 0 ] && command -v sudo >/dev/null; then
 		local SUDO="sudo --preserve-env=DEBIAN_FRONTEND"
 	fi
-	echo "Running: ${SUDO} $@"
-	${SUDO} "$@"
+	echo "Running: $SUDO $*"
+	$SUDO "$@"
 }
 
 
 # Find vim
 VIM="$(which vim || true)"
-if [[ -z "${VIM}" ]];
-then
-	>&2 echo "Error: Cannot find vim"
-	exit 1
-fi
+if [[ -z "$VIM" ]]; then >&2 echo "Error: Cannot find vim"; exit 1; fi
 
 # Setup
-cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd -- "$( dirname -- "$0" )"
 set -x
 
 # Default vim
-YUM="$(which yum || true)"
-if [[ -n "${YUM}" ]]; then
+if command -v yum >/dev/null; then
 	( \
 		root_do yum remove nano-default-editor --noautoremove \
 		&& ./pkg.sh install_if2 dnf yum nano \
 	) || true
 fi
 ./pkg.sh install_if2 dnf yum vim-default-editor
-git config --global core.editor "${VIM}"
+git config --global core.editor "$VIM"

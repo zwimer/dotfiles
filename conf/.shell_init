@@ -1,12 +1,12 @@
 # shellcheck disable=SC1090,SC1091,SC2034
-# Read by all shells
+# Read by bash and zsh
 
 # Drop into a tmux terminal if ssh-ing
-if command -v tmux >/dev/null && [[ "$OSTYPE" == "linux"* ]] && [[ "$-" == *i* ]] && [ -z "$SKIP_TMUX" ]; then
-	if [ -z "${TMUX}" ] && [ -n "${SSH_CONNECTION}" ]; then
+if command -v tmux >/dev/null && [[ "$OSTYPE" == "linux"* && "$-" == *i* && -z "$SKIP_TMUX" ]]; then
+	if [[ -z "${TMUX}" && -n "${SSH_CONNECTION}" ]]; then
 		tmux attach -t default || tmux new -s default
-	elif [ -n "${TMUX}" ]; then
-		[ ! -f /etc/motd ] || cat /etc/motd
+	elif [[ -n "${TMUX}" ]]; then
+		[[ ! -f /etc/motd ]] || cat /etc/motd
 		function update_ssh_auth_sock() { source <(tmux show-environment | grep '^SSH_AUTH_SOCK='); }
 		function sudo() { update_ssh_auth_sock; /usr/bin/sudo "$@"; }
 		update_ssh_auth_sock  # Update now
@@ -14,7 +14,6 @@ if command -v tmux >/dev/null && [[ "$OSTYPE" == "linux"* ]] && [[ "$-" == *i* ]
 fi
 
 # ------------------- Computer Specific -------------------
-
 
 
 # ------------------- Exports -------------------
@@ -28,13 +27,13 @@ export GT='https://www.github.com/zwimer/'
 export HISTSIZE=1000000000
 export SAVEHIST=1000000000
 export HISTFILESIZE=1000000000
-if [ -n "${BASH+x}" ]; then HISTTIMEFORMAT="%F %T "; fi
+if [[ -n "${BASH+x}" ]]; then HISTTIMEFORMAT="%F %T "; fi
 
 # App config
 export FFSEND_HOST='https://send.zwimer.com/'
-if [ "$HOST" = Cryogenic ]; then export FFSEND_HOST="http://localhost:1443"; fi
+if [[ "$HOST" = Cryogenic ]]; then export FFSEND_HOST="http://localhost:1443"; fi
 if command -v vim >/dev/null; then export EDITOR="vim -p"; fi
-if [ -n "${ZSH+x}" ] && [ -n "${HOST+x}" ]; then export ZSH_COMPDUMP="${ZSH}/cache/.zcompdump-${HOST}"; fi
+if [[ -n "${ZSH+x}" && -n "${HOST+x}" ]]; then export ZSH_COMPDUMP="${ZSH}/cache/.zcompdump-${HOST}"; fi
 export LS_COLORS="rs=0:di=01;34:ln=01;35:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=01;37;41:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;31:"
 export LSCOLORS="ExFxCxDxBxegedabagacad"
 export DOCKER_SCAN_SUGGEST=false
@@ -61,7 +60,7 @@ alias vim='vim -p'
 alias mv='mv -i'
 alias cp='cp -i --preserve=mode'  # --preserve=mode because GNU cp needs this to clonefile on macOS
 alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.mypy_cache,__pycache__}"
-if [ -d "${HOME}/.cache" ]; then alias wget='wget --hsts-file=~/.cache/wget-hsts'; fi
+if [[ -d "${HOME}/.cache" ]]; then alias wget='wget --hsts-file=~/.cache/wget-hsts'; fi
 
 # New commands
 alias g='git'
@@ -87,7 +86,7 @@ function search2() { (set -u; grep -irl "${1}" .); }
 # Avoid accidents
 if command -v pip >/dev/null; then
 	function pip() {
-		if [ -z "${VIRTUAL_ENV}" ] && [ "$#" -ge 1 ] && [ "$1" == "install" ]; then
+		if [[ -z "${VIRTUAL_ENV}" && "$#" -ge 1 && "$1" == "install" ]]; then
 			>&2 echo "Error: Do not use pip outside of a virtualenv"
 			return 1
 		fi
@@ -103,7 +102,7 @@ if command -v python3 >/dev/null && command -v virtualenv >/dev/null; then
 	VIRTUALENVWRAPPER_VIRTUALENV="$(which virtualenv)"  # Might be overwritten below
 	export WORKON_HOME VIRTUALENVWRAPPER_PYTHON VIRTUALENVWRAPPER_VIRTUALENV
 	for _VENV_DIR_CHK in "/usr/bin" "/opt/homebrew/bin" "/usr/share/virtualenvwrapper"; do
-		if [ -f "${_VENV_DIR_CHK}/virtualenvwrapper_lazy.sh" ]; then
+		if [[ -f "${_VENV_DIR_CHK}/virtualenvwrapper_lazy.sh" ]]; then
 			source "${_VENV_DIR_CHK}/virtualenvwrapper_lazy.sh"
 			break
 		fi
@@ -112,7 +111,7 @@ if command -v python3 >/dev/null && command -v virtualenv >/dev/null; then
 fi
 
 # virtualenv: cli
-if [ -d "${WORKON_HOME}/cli/bin/" ]; then export PATH="${PATH}:${WORKON_HOME}/cli/bin/"; fi
+if [[ -d "${WORKON_HOME}/cli/bin/" ]]; then export PATH="${PATH}:${WORKON_HOME}/cli/bin/"; fi
 hash -r
 if command -v delayed_rm >/dev/null; then alias rm='delayed_rm'; fi
 if command -v sigsleep >/dev/null; then alias sleep='sigsleep'; fi
@@ -146,7 +145,7 @@ if command -v fzf >/dev/null; then
 	}
 
 	# Auto completion and key bindings
-	if [ -n "${ZSH_NAME}" ]; then
+	if [[ -n "${ZSH_NAME}" ]]; then
 		if [[ "${OSTYPE}" == 'darwin'* ]]; then
 			source "${HOMEBREW_PREFIX}/opt/fzf/shell/completion.zsh"
 			source "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh"
@@ -159,7 +158,7 @@ if command -v fzf >/dev/null; then
 fi
 
 # Warnings
-if [ -f "${HOME}/.profile" ]; then >&2 echo "Warning: ~/.profile exists"; fi
+if [[ -f "${HOME}/.profile" ]]; then >&2 echo "Warning: ~/.profile exists"; fi
 
 # Useful functions
 function stopwatch() {
@@ -192,9 +191,9 @@ elif [[ "${OSTYPE}" == 'darwin'* ]]; then
 	export HOMEBREW_NO_ENV_HINTS=1
 	export HOMEBREW_NO_ANALYTICS=1
 	export HOMEBREW_NO_INSTALL_UPGRADE=1
-	if [ -d ~/.local/bin/jet-brains/ ]; then export PATH="${PATH}:${HOME}/.local/bin/jet-brains/"; fi
-	if [ ! -f "${HOME}/.profile" ] && [ -f "${HOME}/.cargo/env" ]; then source "${HOME}/.cargo/env"; fi
-	if [ -f ~/.local/launchd/ssh-agent/env ]; then
+	if [[ -d ~/.local/bin/jet-brains/ ]]; then export PATH="${PATH}:${HOME}/.local/bin/jet-brains/"; fi
+	if [[ ! -f "${HOME}/.profile" && -f "${HOME}/.cargo/env" ]]; then source "${HOME}/.cargo/env"; fi
+	if [[ -f ~/.local/launchd/ssh-agent/env ]]; then
 		source ~/.local/launchd/ssh-agent/env
 	else
 		>&2 echo "Warning: ssh-agent env file not found"
@@ -209,7 +208,7 @@ elif [[ "${OSTYPE}" == 'darwin'* ]]; then
 	fi
 
 	# Help
-	if [ -n "${ZSH_NAME}" ]; then
+	if [[ -n "${ZSH_NAME}" ]]; then
 		unalias run-help 2> /dev/null
 		autoload run-help
 		HELPDIR=/usr/share/zsh/"${ZSH_VERSION}"/help
@@ -246,7 +245,7 @@ elif [[ "${OSTYPE}" == 'darwin'* ]]; then
 		for NAME in coreutils libtool gnu-tar grep gnu-sed make findutils; do
 			BASE="/opt/homebrew/Cellar/${NAME}"
 			VER="$(/bin/ls "${BASE}/" 2> /dev/null | /usr/bin/tail -n 1)"
-			[ -n "$VER" ] && export PATH="${BASE}/${VER}/libexec/gnubin:${PATH}"
+			[[ -n "$VER" ]] && export PATH="${BASE}/${VER}/libexec/gnubin:${PATH}"
 		done
 		hash -r
 	}

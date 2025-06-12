@@ -1,6 +1,5 @@
 #!/bin/sh -eux
 
-
 # Env
 EMAIL="github@zwimer.com"
 SSHDIR="${HOME}/.ssh"
@@ -10,27 +9,28 @@ ALLOWED_SIGNERS="${GIT_CDIR}/allowed_signers"
 
 # Signing key
 SSHDIR="${HOME}/.ssh"
-if [ ! -d "${SSHDIR}" ]; then
-	mkdir -m 700 "${SSHDIR}"
+if [ ! -d "$SSHDIR" ]; then
+	mkdir -m 700 "$SSHDIR"
 fi
 KEYFILE="${SSHDIR}/GitSigningKey"
-if [ ! -f "${KEYFILE}" ]; then
-	ssh-keygen -t ed25519 -o -a 150 -C "$(whoami)_$(uname -n)_GitSigningKey" -N "" -f "${KEYFILE}"
+if [ ! -f "$KEYFILE" ]; then
+	ssh-keygen -t ed25519 -o -a 150 -C "$(whoami)_$(uname -n)_GitSigningKey" -N "" -f "$KEYFILE"
 fi
 
 # Allowed signers file
+# shellcheck disable=SC2174
 mkdir -p -m 755 "$GIT_CDIR"
-touch "${ALLOWED_SIGNERS}"
-chmod 644 "${ALLOWED_SIGNERS}"
-echo -n "${EMAIL} " > "${ALLOWED_SIGNERS}"
-cat "${KEYFILE}.pub" >> "${ALLOWED_SIGNERS}"
+touch "$ALLOWED_SIGNERS"
+chmod 644 "$ALLOWED_SIGNERS"
+printf %s "$EMAIL " >"$ALLOWED_SIGNERS"
+cat "$KEYFILE.pub" >>"$ALLOWED_SIGNERS"
 
 # git LFS
 git lfs install
 
 # Signing config
-git config --global gpg.ssh.allowedSignersFile "${ALLOWED_SIGNERS}"
-git config --global user.signingkey "${KEYFILE}"
+git config --global gpg.ssh.allowedSignersFile "$ALLOWED_SIGNERS"
+git config --global user.signingkey "$KEYFILE"
 git config --global tag.forceSignAnnotated true
 git config --global commit.gpgsign true
 git config --global gpg.format ssh
@@ -41,8 +41,7 @@ git config --global user.email "$EMAIL"
 
 # Core
 touch ~/.gitignore
-command -v vim > /dev/null
-if [ "$?" -eq 0 ]; then
+if command -v vim >/dev/null; then
 	git config --global core.editor "$(which vim)"
 fi
 git config --global core.excludesfile ~/.gitignore

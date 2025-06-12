@@ -104,7 +104,7 @@ vim_ycm: vim python
 	./scripts/pkg.sh install_if2 dnf yum     cmake python3-devel gcc-c++ make
 	sed -i "s|\" Plugin 'Valloric/YouCompleteMe'| Plugin 'Valloric/YouCompleteMe'|g" ~/.vimrc
 	vim +PluginInstall +qall
-	cd ~/.vim/bundle/YouCompleteMe && ./install.py --clang-completer # --force-sudo if root
+	cd ~/.vim/bundle/YouCompleteMe && ./install.py --clang-completer  # --force-sudo if root
 	@echo '*** YouCompleteMe setup ! ***'
 
 ##!    linux   : do all of the above in order (skipping non-linux items)
