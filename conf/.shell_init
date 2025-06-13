@@ -81,7 +81,8 @@ alias qargsJ='quote | xargs -oJ {} '
 
 # Search
 alias search='find . | grep -i'
-function search2() { (set -u; grep -irl "${1}" .); }
+function search2() { (set -u; grep -iRl "${1}" .); }
+function search3() { (set -u; grep -irl "${1}" .); }
 
 # Avoid accidents
 if command -v pip >/dev/null; then
@@ -161,15 +162,8 @@ fi
 if [[ -f "${HOME}/.profile" ]]; then >&2 echo "Warning: ~/.profile exists"; fi
 
 # Useful functions
-function stopwatch() {
-	local C; C=1
-	while true; do sleep 1; echo "$C"; C="$((C+1))"; done
-}
-
-function beep() {
-	local i
-	for i in $(seq 1 5); do echo -ne '\007'; sleep .2; done
-}
+function beep() { local i; for i in $(seq 1 5); do echo -ne '\007'; sleep .2; done; }
+function stopwatch() { local C; C=1; while true; do sleep 1; echo "$C"; C="$((C+1))"; done; }
 
 # ------------------- OS Specific -------------------
 
@@ -183,7 +177,6 @@ if [[ "${OSTYPE}" == 'linux'* ]]; then
 	function btrfs_snapshot_diff() {
 		sudo btrfs send --no-data -p "$1" "$2" | mbuffer -m 50M | btrfs receive --dump
 	}
-
 elif [[ "${OSTYPE}" == 'darwin'* ]]; then
 
 	# Env
@@ -260,6 +253,7 @@ elif [[ "${OSTYPE}" == 'darwin'* ]]; then
 	# shellcheck disable=SC2164
 	function opend() { echo "$1"; cd "$1" && open-by-N.sh -i; cd -; }
 	function loudfail() { set -E; trap 'echo FAIL' ERR; }
+	function flush_dns() { sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder; }
 	function brew_list_greedy() {
 		brew info --cask --json=v2 $(brew ls --cask) \
 		| jq -r '.casks[]|select(.auto_updates==true)|.token'
