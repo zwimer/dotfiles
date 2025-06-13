@@ -260,6 +260,10 @@ elif [[ "${OSTYPE}" == 'darwin'* ]]; then
 	# shellcheck disable=SC2164
 	function opend() { echo "$1"; cd "$1" && open-by-N.sh -i; cd -; }
 	function loudfail() { set -E; trap 'echo FAIL' ERR; }
+	function brew_list_greedy() {
+		brew info --cask --json=v2 $(brew ls --cask) \
+		| jq -r '.casks[]|select(.auto_updates==true)|.token'
+	}
 
 	# ccache
 	if command -v ccache >/dev/null; then
