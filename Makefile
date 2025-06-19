@@ -59,7 +59,7 @@ tmux:
 .PHONY: gdb
 gdb:
 	./scripts/pkg.sh install gdb
-	git clone https://github.com/longld/peda.git ~/.peda || true
+	git clone https://github.com/zwimer/peda.git ~/.peda || true
 	./scripts/append.sh file ./conf/.gdbinit ~/.gdbinit
 	@echo '*** gdb setup ! ***'
 
