@@ -183,6 +183,7 @@ elif [[ "${OSTYPE}" == 'darwin'* ]]; then
 	export HOMEBREW_BAT=1
 	export HOMEBREW_NO_ENV_HINTS=1
 	export HOMEBREW_NO_ANALYTICS=1
+	export HOMEBREW_UPGRADE_GREEDY=1
 	export HOMEBREW_NO_INSTALL_UPGRADE=1
 	if [[ -d ~/.local/bin/jet-brains/ ]]; then export PATH="${PATH}:${HOME}/.local/bin/jet-brains/"; fi
 	if [[ ! -f "${HOME}/.profile" && -f "${HOME}/.cargo/env" ]]; then source "${HOME}/.cargo/env"; fi
@@ -253,8 +254,9 @@ elif [[ "${OSTYPE}" == 'darwin'* ]]; then
 	# shellcheck disable=SC2164
 	function opend() { echo "$1"; cd "$1" && open-by-N.sh -i; cd -; }
 	function loudfail() { set -E; trap 'echo FAIL' ERR; }
-	function flush_dns() { sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder; }
-	function brew_list_greedy() {
+	function strip_quarantine() { sudo xattr -r -d com.apple.quarantine "$1"; }
+	function flush-dns() { sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder; }
+	function brew-list-greedy() {
 		brew info --cask --json=v2 $(brew ls --cask) \
 		| jq -r '.casks[]|select(.auto_updates==true)|.token'
 	}
