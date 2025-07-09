@@ -26,6 +26,7 @@ Plugin 'tpope/vim-commentary'               " Commenting via gcc
 Plugin 'bogado/file-line'                   " Run vim A:B to open file a at line B (switched to 'main' branch)
 Plugin 'ntpeters/vim-better-whitespace'     " Handles trailing whitespace (trim on save also)
 Plugin 'tpope/vim-surround'                 " Change surrounding characters
+Plugin 'zwimer/vim-caddyfile'               " Caddy syntax highlighting
 " Plugin 'mbbill/undotree'                    " Undo tree
 " Plugin 'Valloric/YouCompleteMe'             " Autocomplete
 " Plugin 'lervag/vimtex'                      " Latex
