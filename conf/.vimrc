@@ -45,6 +45,11 @@ endif
 call vundle#end()            " required
 filetype plugin indent on    " required
 
+" Support .j2 files
+augroup j2filetype
+  autocmd!
+  autocmd BufRead,BufNewFile *.j2 setfiletype yaml.jinja
+augroup END
 
 " Vim info file
 set viminfo+=n~/.vim/viminfo
