@@ -6,7 +6,10 @@ if command -v tmux >/dev/null && [[ "$OSTYPE" == "linux"* && "$-" == *i* && -z "
 	if [[ -z "${TMUX}" && -n "${SSH_CONNECTION}" ]]; then
 		tmux attach -t default || tmux new -s default
 	elif [[ -n "${TMUX}" ]]; then
-		[[ ! -f /etc/motd ]] || cat /etc/motd
+		if [[ -f /etc/motd ]]; then cat /etc/motd; fi
+		if [[ -d /etc/motd.d && -n "$(find /etc/motd.d -mindepth 1 -print -quit)" ]]; then
+			cat /etc/motd.d/*
+		fi
 		function update_ssh_auth_sock() { source <(tmux show-environment | grep '^SSH_AUTH_SOCK='); }
 		function sudo() { update_ssh_auth_sock; /usr/bin/sudo "$@"; }
 		update_ssh_auth_sock  # Update now
