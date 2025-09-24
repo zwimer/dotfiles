@@ -3,8 +3,12 @@
 
 # Drop into a tmux terminal if ssh-ing
 if command -v tmux >/dev/null && [[ "$OSTYPE" == "linux"* && "$-" == *i* && -z "$SKIP_TMUX" ]]; then
+	function _fake_sudo_no_oa() {
+		if [[ "$*" = *OA ]]; then >&2 echo "Remove the OA?"; else /usr/bin/sudo "$@"; fi
+	}
 	if [[ -z "${TMUX}" && -n "${SSH_CONNECTION}" ]]; then
 		tmux attach -t default || tmux new -s default
+		function sudo() { _fake_sudo_no_oa "$@"; }
 	elif [[ -n "${TMUX}" ]]; then
 		if [[ -f /etc/motd ]]; then cat /etc/motd; fi
 		if [[ -d /etc/motd.d && -n "$(find /etc/motd.d -mindepth 1 -print -quit)" ]]; then
