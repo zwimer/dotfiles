@@ -48,7 +48,8 @@ filetype plugin indent on    " required
 " Support .j2 files
 augroup j2filetype
   autocmd!
-  autocmd BufRead,BufNewFile *.j2 setfiletype yaml.jinja
+  autocmd BufRead,BufNewFile *.yml.j2 setfiletype yaml.jinja
+  autocmd BufRead,BufNewFile *.caddyfile.j2 setfiletype caddyfile.jinja
 augroup END
 
 " Vim info file
