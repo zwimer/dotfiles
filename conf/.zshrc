@@ -5,7 +5,7 @@
 export ZSH=~/.oh-my-zsh
 
 # Adjustments for oh-my-zsh
-export ZSH_COMPDUMP="${ZSH}/cache/.zcompdump-${HOST}"
+export ZSH_COMPDUMP="${ZSH}/cache/zcompdump-${HOST}"
 if [[ "${OSTYPE}" == 'darwin'* ]]; then
 	export PATH="/opt/homebrew/bin${PATH+:$PATH}";  # Use GNU git
 fi

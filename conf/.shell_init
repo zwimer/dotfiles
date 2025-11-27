@@ -10,10 +10,7 @@ if command -v tmux >/dev/null && [[ "$OSTYPE" == "linux"* && "$-" == *i* && -z "
 		tmux attach -t default || tmux new -s default
 		function sudo() { _fake_sudo_no_oa "$@"; }
 	elif [[ -n "${TMUX}" ]]; then
-		if [[ -f /etc/motd ]]; then cat /etc/motd; fi
-		if [[ -d /etc/motd.d && -n "$(find /etc/motd.d -mindepth 1 -print -quit)" ]]; then
-			cat /etc/motd.d/*
-		fi
+		python -c 'from pathlib import Path; fs = ([m] if (m := Path("/etc/motd")).exists() else []) + list(Path("/etc/motd.d").glob("*")); print("".join((f"{x}\n" if (x := i.read_text()) and x[-1] != "\n" else x) for i in fs), end="")'
 		function update_ssh_auth_sock() { source <(tmux show-environment | grep '^SSH_AUTH_SOCK='); }
 		function sudo() { update_ssh_auth_sock; _fake_sudo_no_oa "$@"; }
 		update_ssh_auth_sock  # Update now
