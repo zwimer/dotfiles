@@ -88,7 +88,9 @@ vim: shell
 gpg: shell
 	./scripts/pkg.sh install gnupg
 	mkdir -m 700 ~/.gnupg || true
-	./scripts/append.sh file ./conf/gpg.conf ~/.gnupg/gpg.conf
+	./scripts/append.sh file ./conf/.gnupg/gpg.conf ~/.gnupg/gpg.conf
+	./scripts/append.sh file ./conf/.gnupg/gpg-agent.conf ~/.gnupg/gpg-agent.conf
+	chmod 600 ~/.gnupg/gpg.conf ~/.gnupg/gpg-agent.conf
 	@echo '*** gpg setup ! ***'
 
 ##!    most    : do most of the above in order
