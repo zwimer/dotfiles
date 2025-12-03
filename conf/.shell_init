@@ -37,7 +37,7 @@ if [[ -n "${BASH+x}" ]]; then HISTTIMEFORMAT="%F %T "; fi
 export FFSEND_HOST='https://send.zwimer.com/'
 if [[ "$HOST" = Cryogenic ]]; then export FFSEND_HOST="http://localhost:1443"; fi
 if command -v vim >/dev/null; then export EDITOR="vim -p"; fi
-if [[ -n "${ZSH+x}" && -n "${HOST+x}" ]]; then export ZSH_COMPDUMP="${ZSH}/cache/.zcompdump-${HOST}"; fi
+if [[ -n "${ZSH+x}" && -n "${HOST+x}" ]]; then export ZSH_COMPDUMP="$ZSH/cache/.zcompdump-$HOST"; fi
 export LS_COLORS="rs=0:di=01;34:ln=01;35:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=01;37;41:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;31:"
 export LSCOLORS="ExFxCxDxBxegedabagacad"
 export DOCKER_SCAN_SUGGEST=false
@@ -51,7 +51,7 @@ export LESSHISTFILE=-
 if [[ "$-" == *i* ]]; then tabs -4; fi
 
 # Brew
-if [[ "${OSTYPE}" == 'darwin'* ]]; then eval "$(/opt/homebrew/bin/brew shellenv)"; hash -r; fi
+if [[ "$OSTYPE" == 'darwin'* ]]; then eval "$(/opt/homebrew/bin/brew shellenv)"; hash -r; fi
 
 # Default flags
 alias g++='g++ -Wall -Wextra -std=c++17'
@@ -65,7 +65,7 @@ alias vim='vim -p'
 alias mv='mv -i'
 alias cp='cp -i --preserve=mode'  # --preserve=mode because GNU cp needs this to clonefile on macOS
 alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.mypy_cache,__pycache__}"
-if [[ -d "${HOME}/.cache" ]]; then alias wget='wget --hsts-file=~/.cache/wget-hsts'; fi
+if [[ -d "$HOME/.cache" ]]; then alias wget='wget --hsts-file=~/.cache/wget-hsts'; fi
 
 # New commands
 alias g='git'
@@ -76,9 +76,19 @@ alias neofetch='neowofetch'
 alias today='date "+%-m-%-d"'
 alias untar='tar --same-owner -xvf'
 alias wdiff='git diff --no-index --word-diff'
-alias encrypt-gpg='gpg --symmetric --no-symkey-cache --cipher-algo AES256'
 function get_host() { grep -i "$1" /etc/hosts; }
-function encrypt() { gpg --symmetric --no-symkey-cache --cipher-algo AES256 -o "$1".gpg "$1"; }
+function encrypt() {
+	local F="$1" TB=""
+	if [ -d "$F" ]; then
+		TB="$F.tar.gz"
+		if [[ -e "$TB" || -h "$TB" ]]; then >&2 echo "$TB already exists"; fi
+		echo -n "Compressing $F into $TB"
+		tar czvpf "$TB" "$F"
+		F="$TB"
+	fi
+	gpg --symmetric --no-symkey-cache --cipher-algo AES256 -o "$F".gpg "$F"
+	if [ -n "$TB" ]; then echo "Purging: $TB"; \rm "$TB"; fi
+}
 
 # Quote
 alias qargs='quote | xargs -o '
@@ -86,30 +96,30 @@ alias qargsJ='quote | xargs -oJ {} '
 
 # Search
 alias search='find . | grep -i'
-function search2() { (set -u; grep -iRl "${1}" .); }
-function search3() { (set -u; grep -irl "${1}" .); }
+function search2() { (set -u; grep -iRl "$1" .); }
+function search3() { (set -u; grep -irl "$1" .); }
 
 # Avoid accidents
 if command -v pip >/dev/null; then
 	function pip() {
-		if [[ -z "${VIRTUAL_ENV}" && "$#" -ge 1 && "$1" == "install" ]]; then
+		if [[ -z "$VIRTUAL_ENV" && "$#" -ge 1 && "$1" == "install" ]]; then
 			>&2 echo "Error: Do not use pip outside of a virtualenv"
 			return 1
 		fi
-		\pip3 "${@}"
+		\pip3 "$@"
 	}
 	alias pip3=pip
 fi
 
 # Configuration virtualenv
 if command -v python3 >/dev/null && command -v virtualenv >/dev/null; then
-	WORKON_HOME="${HOME}/.virtualenvs"
+	WORKON_HOME="$HOME/.virtualenvs"
 	VIRTUALENVWRAPPER_PYTHON="$(which python3)"         # Might be overwritten below
 	VIRTUALENVWRAPPER_VIRTUALENV="$(which virtualenv)"  # Might be overwritten below
 	export WORKON_HOME VIRTUALENVWRAPPER_PYTHON VIRTUALENVWRAPPER_VIRTUALENV
 	for _VENV_DIR_CHK in "/usr/bin" "/opt/homebrew/bin" "/usr/share/virtualenvwrapper"; do
-		if [[ -f "${_VENV_DIR_CHK}/virtualenvwrapper_lazy.sh" ]]; then
-			source "${_VENV_DIR_CHK}/virtualenvwrapper_lazy.sh"
+		if [[ -f "$_VENV_DIR_CHK/virtualenvwrapper_lazy.sh" ]]; then
+			source "$_VENV_DIR_CHK/virtualenvwrapper_lazy.sh"
 			break
 		fi
 	done
@@ -117,7 +127,7 @@ if command -v python3 >/dev/null && command -v virtualenv >/dev/null; then
 fi
 
 # virtualenv: cli
-if [[ -d "${WORKON_HOME}/cli/bin/" ]]; then export PATH="${PATH}:${WORKON_HOME}/cli/bin/"; fi
+if [[ -d "$WORKON_HOME/cli/bin/" ]]; then export PATH="$PATH:$WORKON_HOME/cli/bin/"; fi
 hash -r
 if command -v delayed_rm >/dev/null; then alias rm='delayed_rm'; fi
 if command -v sigsleep >/dev/null; then alias sleep='sigsleep'; fi
@@ -141,9 +151,9 @@ if command -v fzf >/dev/null; then
 	export FZF_COMPLETION_TRIGGER='~~'
 	export FZF_COMPLETION_OPTS='--border --info=inline'
 	_fzf_comprun() {
-		local CMD="${1}"
+		local CMD="$1"
 		shift
-		case "${CMD}" in
+		case "$CMD" in
 			cd)           fzf --preview 'tree -C {} | head -200'   "$@" ;;
 			export|unset) fzf --preview "eval 'echo \$'{}"         "$@" ;;
 			*)            fzf "$@" ;;
@@ -151,10 +161,10 @@ if command -v fzf >/dev/null; then
 	}
 
 	# Auto completion and key bindings
-	if [[ -n "${ZSH_NAME}" ]]; then
-		if [[ "${OSTYPE}" == 'darwin'* ]]; then
-			source "${HOMEBREW_PREFIX}/opt/fzf/shell/completion.zsh"
-			source "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh"
+	if [[ -n "$ZSH_NAME" ]]; then
+		if [[ "$OSTYPE" == 'darwin'* ]]; then
+			source "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh"
+			source "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"
 		elif [[ "$(grep ^ID= /etc/os-release)" == ID=fedora ]]; then
 			source /usr/share/zsh/site-functions/_fzf  # Do not autoload this
 			source /usr/share/fzf/shell/key-bindings.zsh
@@ -164,7 +174,7 @@ if command -v fzf >/dev/null; then
 fi
 
 # Warnings
-if [[ -f "${HOME}/.profile" ]]; then >&2 echo "Warning: ~/.profile exists"; fi
+if [[ -f "$HOME/.profile" ]]; then >&2 echo "Warning: ~/.profile exists"; fi
 
 # Useful functions
 function beep() { local i; for i in $(seq 1 "${1:-1}"); do echo -ne '\007'; sleep .2; done; }
@@ -172,7 +182,7 @@ function stopwatch() { local C; C=1; while true; do sleep 1; echo "$C"; C="$((C+
 
 # ------------------- OS Specific -------------------
 
-if [[ "${OSTYPE}" == 'linux'* ]]; then
+if [[ "$OSTYPE" == 'linux'* ]]; then
 	if grep 'ID=fedora' /etc/os-release >/dev/null; then
 		alias rename="echo 'dnf install prename to use perl rename for command: rename'"
 		if command -v prename >/dev/null; then alias rename=prename; fi
@@ -190,8 +200,7 @@ if [[ "${OSTYPE}" == 'linux'* ]]; then
 	function btrfs_snapshot_diff() {
 		sudo btrfs send --no-data -p "$1" "$2" | mbuffer -m 50M | btrfs receive --dump
 	}
-
-elif [[ "${OSTYPE}" == 'darwin'* ]]; then
+elif [[ "$OSTYPE" == 'darwin'* ]]; then
 
 	# Env
 	export HOMEBREW_BAT=1
@@ -199,8 +208,8 @@ elif [[ "${OSTYPE}" == 'darwin'* ]]; then
 	export HOMEBREW_NO_ANALYTICS=1
 	export HOMEBREW_UPGRADE_GREEDY=1
 	export HOMEBREW_NO_INSTALL_UPGRADE=1
-	if [[ -d ~/.local/bin/jet-brains/ ]]; then export PATH="${PATH}:${HOME}/.local/bin/jet-brains/"; fi
-	if [[ ! -f "${HOME}/.profile" && -f "${HOME}/.cargo/env" ]]; then source "${HOME}/.cargo/env"; fi
+	if [[ -d ~/.local/bin/jet-brains/ ]]; then export PATH="$PATH:$HOME/.local/bin/jet-brains/"; fi
+	if [[ ! -f "$HOME/.profile" && -f "$HOME/.cargo/env" ]]; then source "$HOME/.cargo/env"; fi
 	if [[ -f ~/.local/launchd/ssh-agent/env ]]; then
 		source ~/.local/launchd/ssh-agent/env
 	else
@@ -216,10 +225,10 @@ elif [[ "${OSTYPE}" == 'darwin'* ]]; then
 	fi
 
 	# Help
-	if [[ -n "${ZSH_NAME}" ]]; then
+	if [[ -n "$ZSH_NAME" ]]; then
 		unalias run-help 2> /dev/null
 		autoload run-help
-		HELPDIR=/usr/share/zsh/"${ZSH_VERSION}"/help
+		HELPDIR=/usr/share/zsh/"$ZSH_VERSION"/help
 		alias help=run-help
 	fi
 
@@ -243,7 +252,7 @@ elif [[ "${OSTYPE}" == 'darwin'* ]]; then
 	alias crashreport-off="sudo defaults write com.apple.CrashReporter DialogType none"
 
 	# Linux-ish
-	function ldd() { otool -L "${1}"; }
+	function ldd() { otool -L "$1"; }
 	alias google-chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 
 	# GNU
@@ -251,9 +260,9 @@ elif [[ "${OSTYPE}" == 'darwin'* ]]; then
 		local NAME BASE VER
 		NAME=""
 		for NAME in coreutils libtool gnu-tar grep gnu-sed make findutils; do
-			BASE="/opt/homebrew/Cellar/${NAME}"
-			VER="$(/bin/ls "${BASE}/" 2> /dev/null | /usr/bin/tail -n 1)"
-			[[ -n "$VER" ]] && export PATH="${BASE}/${VER}/libexec/gnubin:${PATH}"
+			BASE="/opt/homebrew/Cellar/$NAME"
+			VER="$(/bin/ls "$BASE/" 2> /dev/null | /usr/bin/tail -n 1)"
+			[[ -n "$VER" ]] && export PATH="$BASE/$VER/libexec/gnubin:$PATH"
 		done
 		hash -r
 	}
@@ -277,11 +286,11 @@ elif [[ "${OSTYPE}" == 'darwin'* ]]; then
 
 	# ccache
 	if command -v ccache >/dev/null; then
-		export PATH="${HOMEBREW_PREFIX}/opt/ccache/libexec:${PATH}"
+		export PATH="$HOMEBREW_PREFIX/opt/ccache/libexec:$PATH"
 	fi
 fi
 hash -r
 
 # ------------------- After OS Specific Aliases -------------------
 
-function ip_where() { curl -s "ipinfo.io/${1}/json" | jq -r ".city, .region" | sed -z 's/\n/, /'; }
+function ip_where() { curl -s "ipinfo.io/$1/json" | jq -r ".city, .region" | sed -z 's/\n/, /'; }
