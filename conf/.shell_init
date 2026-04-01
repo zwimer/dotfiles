@@ -54,8 +54,6 @@ if [[ "$-" == *i* ]]; then tabs -4; fi
 if [[ "$OSTYPE" == 'darwin'* ]]; then eval "$(/opt/homebrew/bin/brew shellenv)"; hash -r; fi
 
 # Default flags
-alias g++='g++ -Wall -Wextra -std=c++17'
-alias gcc='gcc -Wall -Wextra'
 alias objdump='objdump -M intel'
 alias octave='octave --no-gui'
 alias cling='cling --std=c++17'
@@ -66,6 +64,44 @@ alias mv='mv -i'
 alias cp='cp -i --preserve=mode'  # --preserve=mode because GNU cp needs this to clonefile on macOS
 alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.mypy_cache,__pycache__}"
 if [[ -d "$HOME/.cache" ]]; then alias wget='wget --hsts-file=~/.cache/wget-hsts'; fi
+
+# Compiler flags
+GNU_COMPILER_DEFAULT_FLAGS=(
+	-Wall
+	-Wextra
+	-Wfatal-errors
+	-Wno-comment
+	-Wpedantic
+	-Wcast-qual
+	-Wshadow
+	-Wunused
+	-Wduplicated-cond
+	-Wcast-align
+	-Wnull-dereference
+	-Wdouble-promotion
+	-Wfloat-equal
+	-Wuseless-cast
+	-Wsign-conversion
+	-Wconversion
+	-Wno-stringop-overflow
+	-Wno-array-bounds
+)
+if [[ "$OSTYPE" == 'darwin'* ]]; then GNU_COMPILER_DEFAULT_FLAGS+=(-Wrestrict); fi
+function get_gnu_compiler() {  # Determine which compiler to use
+	if [[ -d /opt/homebrew/opt/ccache/libexec ]]; then
+		ls --color=never /opt/homebrew/opt/ccache/libexec | sort -V | grep -- "$1"- | tail -n1
+	elif [[ -d /opt/homebrew/bin ]]; then
+		ls --color=never /opt/homebrew/bin | sort -V | grep -- "$1"- | tail -n1
+	else
+		whereis -q "$1"
+	fi
+}
+function gcc() {
+	"$(get_gnu_compiler gcc)" "${GNU_COMPILER_DEFAULT_FLAGS[@]}" "$@"
+}
+function g++() {
+	"$(get_gnu_compiler g++)" "${GNU_COMPILER_DEFAULT_FLAGS[@]}" -Wnon-virtual-dtor --std=c++23 "$@"
+}
 
 # New commands
 alias g='git'
@@ -79,7 +115,7 @@ alias wdiff='git diff --no-index --word-diff'
 function get_host() { grep -i "$1" /etc/hosts; }
 function encrypt() {
 	local F="$1" TB=""
-	if [ -d "$F" ]; then
+	if [[ -d "$F" ]]; then
 		TB="$F.tar.gz"
 		if [[ -e "$TB" || -h "$TB" ]]; then >&2 echo "$TB already exists"; fi
 		echo -n "Compressing $F into $TB"
@@ -87,7 +123,7 @@ function encrypt() {
 		F="$TB"
 	fi
 	gpg --symmetric --no-symkey-cache --cipher-algo AES256 -o "$F".gpg "$F"
-	if [ -n "$TB" ]; then echo "Purging: $TB"; \rm "$TB"; fi
+	if [[ -n "$TB" ]]; then echo "Purging: $TB"; \rm "$TB"; fi
 }
 
 # Quote
