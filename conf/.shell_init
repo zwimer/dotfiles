@@ -279,7 +279,6 @@ elif [[ "$OSTYPE" == 'darwin'* ]]; then
 	# Fixers
 	# shellcheck disable=SC2142
 	alias fix-audio="ps aux | grep 'coreaudio[d]' | awk '{print \$2}' | xargs sudo kill"
-	alias fix-sudo="sudo gsed -i '2 i auth       sufficient     pam_tid.so' /etc/pam.d/sudo"
 	alias fix-zt='sudo bash -c "launchctl unload /Library/LaunchDaemons/com.zerotier.one.plist; launchctl load /Library/LaunchDaemons/com.zerotier.one.plist"'
 	alias fix-window-server="sudo killall -HUP WindowServer"
 
