@@ -58,7 +58,7 @@ alias objdump='objdump -M intel'
 alias octave='octave --no-gui'
 alias cling='cling --std=c++17'
 alias rsync='rsync -P'
-alias ls='ls --color'
+alias ls='ls --color=auto'
 alias vim='vim -p'
 alias mv='mv -i'
 alias cp='cp -i --preserve=mode'  # --preserve=mode because GNU cp needs this to clonefile on macOS
@@ -114,10 +114,11 @@ alias untar='tar --same-owner -xvf'
 alias wdiff='git diff --no-index --word-diff'
 function get_host() { grep -i "$1" /etc/hosts; }
 function encrypt() {
+	if [[ "$#" -ne 1 ]]; then >&2 echo "Error: Wrong number of arguments"; return; fi
 	local F="$1" TB=""
 	if [[ -d "$F" ]]; then
 		TB="$F.tar.gz"
-		if [[ -e "$TB" || -h "$TB" ]]; then >&2 echo "$TB already exists"; fi
+		if [[ -e "$TB" || -h "$TB" ]]; then >&2 echo "Error: $TB already exists"; return; fi
 		echo -n "Compressing $F into $TB"
 		tar czvpf "$TB" "$F"
 		F="$TB"
