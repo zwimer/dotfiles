@@ -14,6 +14,8 @@ RUN groupadd -fr sudo \
  && usermod -aG sudo user \
  && echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
  && chown -R user:user /dotfiles
+# Fedora docker/PAM permissions bug: https://github.com/docker/build-push-action/issues/1302#issuecomment-2602511120
+RUN chmod 0600 /etc/shadow
 USER user
 
 # Build
