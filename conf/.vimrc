@@ -21,15 +21,17 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Plugins
-Plugin 'airblade/vim-gitgutter'             " Git status of lines (switched to 'main' branch)
+Plugin 'airblade/vim-gitgutter'             " Git status of lines
 Plugin 'tpope/vim-commentary'               " Commenting via gcc
-Plugin 'bogado/file-line'                   " Run vim A:B to open file a at line B (switched to 'main' branch)
+Plugin 'bogado/file-line'                   " Run vim A:B to open file a at line B
 Plugin 'ntpeters/vim-better-whitespace'     " Handles trailing whitespace (trim on save also)
 Plugin 'tpope/vim-surround'                 " Change surrounding characters
 Plugin 'isobit/vim-caddyfile'               " Caddy syntax highlighting
+if !has('ide')
+   Plugin 'Valloric/YouCompleteMe'          " Autocomplete
+   Plugin 'lervag/vimtex'                   " Latex
+endif
 " Plugin 'mbbill/undotree'                    " Undo tree
-" Plugin 'Valloric/YouCompleteMe'             " Autocomplete
-" Plugin 'lervag/vimtex'                      " Latex
 " Plugin 'chrisbra/csv'                       " csv's work better (requires config!)
 " Plugin 'godlygeek/tabular'                  " Align items with tabs at a character
 " Plugin 'nathanaelkane/vim-indent-guides'    " Indent guides
@@ -162,6 +164,12 @@ command! TEXT call TEXT_fn()
 set noerrorbells visualbell t_vb=
 if has('autocmd')
     autocmd GUIEnter * set visualbell t_vb=
+endif
+
+" Idea vim
+if has('ide')
+   set visualbell
+   set noerrorbells
 endif
 
 function! DisplayColorSchemes()

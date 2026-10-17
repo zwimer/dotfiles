@@ -79,6 +79,7 @@ vim: shell
 	mkdir -v -p ~/.vim/colors
 	mv ./conf/github.vim ~/.vim/colors/github.vim
 	./scripts/append.sh file ./conf/.vimrc ~/.vimrc '" '
+	./scripts/append.sh file ./conf/.ideavimrc ~/.ideavimrc '" '
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim || true
 	vim +PluginInstall +qall
 	mkdir -p ~/.vim/after/
