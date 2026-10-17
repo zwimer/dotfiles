@@ -1,19 +1,19 @@
-#!/bin/sh -eux
+#!/bin/bash -eux
 
 # Env
 EMAIL="github@zwimer.com"
-SSHDIR="${HOME}/.ssh"
-KEYFILE="${SSHDIR}/GitSigningKey"
-GIT_CDIR="${HOME}/.config/git"
-ALLOWED_SIGNERS="${GIT_CDIR}/allowed_signers"
+SSHDIR="$HOME/.ssh"
+KEYFILE="$SSHDIR/GitSigningKey"
+GIT_CDIR="$HOME/.config/git"
+ALLOWED_SIGNERS="$GIT_CDIR/allowed_signers"
 
 # Signing key
-SSHDIR="${HOME}/.ssh"
-if [ ! -d "$SSHDIR" ]; then
+SSHDIR="$HOME/.ssh"
+if [[ ! -d "$SSHDIR" ]]; then
 	mkdir -m 700 "$SSHDIR"
 fi
 KEYFILE="${SSHDIR}/GitSigningKey"
-if [ ! -f "$KEYFILE" ]; then
+if [[ ! -f "$KEYFILE" ]]; then
 	ssh-keygen -t ed25519 -o -a 150 -C "$(whoami)_$(uname -n)_GitSigningKey" -N "" -f "$KEYFILE"
 fi
 

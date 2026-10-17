@@ -26,6 +26,7 @@ cli: shell python
 .PHONY: bash
 bash: cli
 	./scripts/append.sh str "source ~/.shell_init" ~/.bashrc
+	./scripts/append.sh file ./conf/.profile ~/.profile
 	@echo '*** bash setup ! ***'
 
 ##!    zsh     : install zsh, oh-my-zsh, and plugins, and configure them (also installs fzf and tree)
@@ -33,6 +34,7 @@ bash: cli
 zsh: cli
 	./scripts/pkg.sh install zsh fzf tree
 	./scripts/append.sh file ./conf/.zshrc ~/.zshrc
+	./scripts/append.sh file ./conf/.zshenv ~/.zshenv
 	./scripts/omz.sh
 	./scripts/append.sh str "source ~/.shell_init" ~/.zshrc
 	@echo '*** zsh setup ! ***'

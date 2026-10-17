@@ -1,3 +1,11 @@
+.dockerignore
+.git
+.github
+.gitignore
+.gitmodules
+.pre-commit-config.yaml
 Dockerfile
+LICENSE
+README.md
 **/*.swp
 **/*.swo

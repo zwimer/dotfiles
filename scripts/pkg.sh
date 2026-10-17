@@ -3,6 +3,8 @@
 
 ### Helper functions
 
+SUDO="$( dirname -- "$0" )/sudo.sh"
+test -x "$SUDO"
 
 function err() { >&2 echo "Error: $1"; exit 1; }
 
@@ -11,15 +13,6 @@ function is_in() {
 	shift  # for without 'in' iterates over "$@"
 	for ITR; do [[ "$ITR" == "$MATCH" ]] && return 0; done
 	return 1
-}
-
-function root_do() {
-	local SUDO=
-	if [[ "${EUID}" -ne 0 ]] && command -v sudo 2>/dev/null; then
-		SUDO="sudo --preserve-env=DEBIAN_FRONTEND"
-	fi
-	echo "Running: ${SUDO} $*"
-	${SUDO} "$@"
 }
 
 
@@ -33,7 +26,7 @@ function help() { echo "Supported commands: $SUPPORTED"; }
 function find_pm() {
 	# Package managers listed with most preferred last
 	local NEXT POSSIBLE=("yum" "apt" "apt-get" "dnf")
-	for NEXT in "${POSSIBLE[@]}"; do command -v "${NEXT}" >/dev/null && PM="${NEXT}"; done
+	for NEXT in "${POSSIBLE[@]}"; do command -v "$NEXT" >/dev/null && PM="$NEXT"; done
 	[[ -n "${PM:-}" ]] || err "Could not find any package manager."
 }
 
@@ -48,11 +41,11 @@ function install_helper() {
 	if [[ "$PM" == apt || "$PM" == apt-get ]]; then
 		# Technically this fails for files with newlines in the name...
 		if [[ "$(find /var/lib/apt/lists -type f | wc -l)" -eq 0 ]]; then
-			root_do "$PM" update --fix-missing -q
+			"$SUDO" "$PM" update --fix-missing -q
 		fi
 	fi
 	# Install
-	root_do "$PM" install -yq "$@"
+	"$SUDO" "$PM" install -yq "$@"
 }
 
 # Install the passed packages if the package manager is $1 or $2
@@ -70,7 +63,7 @@ function install_if2() {
 CMD="$1"
 shift
 
-SUPPORTED=("help" "root_do" "install" "install_if2")
+SUPPORTED=("help" "install" "install_if2")
 if ! is_in "$CMD" "${SUPPORTED[@]}"; then err "Unknown command $CMD"; fi
 
 "$CMD" "$@"

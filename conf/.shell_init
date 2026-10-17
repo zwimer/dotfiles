@@ -213,9 +213,6 @@ if command -v fzf >/dev/null; then
 	fi
 fi
 
-# Warnings
-if [[ -f "$HOME/.profile" ]]; then >&2 echo "Warning: ~/.profile exists"; fi
-
 # Useful functions
 function beep() { local i; for i in $(seq 1 "${1:-1}"); do echo -ne '\007'; sleep .2; done; }
 function stopwatch() { local C; C=1; while true; do sleep 1; echo "$C"; C="$((C+1))"; done; }
