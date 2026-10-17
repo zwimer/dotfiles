@@ -263,6 +263,9 @@ elif [[ "$OSTYPE" == 'darwin'* ]]; then
 	if ! grep 'HISTSIZE=1000000000' /etc/zshrc >/dev/null 2>/dev/null; then
 		>&2 echo "*** Set history settings in /etc/zshrc ! ***"
 	fi
+	if ! grep 'HISTSIZE=1000000000' /etc/zshenv >/dev/null 2>/dev/null; then
+		>&2 echo "*** Set history settings in /etc/zshenv ! ***"
+	fi
 
 	# Help
 	if [[ -n "$ZSH_NAME" ]]; then
