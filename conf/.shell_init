@@ -43,6 +43,9 @@ export LSCOLORS="ExFxCxDxBxegedabagacad"
 export DOCKER_SCAN_SUGGEST=false
 export DOCKER_CLI_HINTS=false
 export DOCKER_BUILDKIT=1
+export PIP_REQUIRE_VIRTUALENV=true
+export PIP_USER=0
+export PYTHONNOUSERSITE=1
 export LESSHISTFILE=-
 
 # ------------------- General purpose -------------------
@@ -164,6 +167,9 @@ if command -v python3 >/dev/null && command -v virtualenv >/dev/null; then
 		fi
 	done
 	unset _VENV_DIR_CHK
+	if [[ -d "$(python -m site --user-site)" ]]; then
+		>&2 echo "Warning: python user-dir exists"
+	fi
 fi
 
 # virtualenv: cli

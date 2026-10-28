@@ -12,6 +12,7 @@ shell:
 python: shell
 	./scripts/pkg.sh install_if2 apt apt-get python3-pip virtualenvwrapper
 	./scripts/pkg.sh install_if2 dnf yum     python3-pip python3-virtualenvwrapper
+	pip3 config set global.user false
 	@echo '*** python setup ! ***'
 
 ##!    cli     : install the venv cli including: delayed_rm, quote, etc.
