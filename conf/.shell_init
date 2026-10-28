@@ -167,7 +167,7 @@ if command -v python3 >/dev/null && command -v virtualenv >/dev/null; then
 		fi
 	done
 	unset _VENV_DIR_CHK
-	if [[ -d "$(python -m site --user-site)" ]]; then
+	if [[ -d "$(python3 -m site --user-site)" ]]; then
 		>&2 echo "Warning: python user-dir exists"
 	fi
 fi
