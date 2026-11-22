@@ -217,7 +217,7 @@ if command -v fzf >/dev/null; then
 	if [[ -n "$ZSH_NAME" ]]; then
 		source <(fzf --zsh)
 	elif [[ -n "${BASH+x}" ]]; then
-		source <(fzf --zsh)
+		source <(fzf --bash)
 	fi
 fi
 
