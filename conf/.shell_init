@@ -2,6 +2,9 @@
 # Read by bash and zsh
 
 # Drop into a tmux terminal if ssh-ing
+function _fake_sudo_no_oa() {
+	if [[ "$*" = *OA ]]; then >&2 echo "Remove the OA?"; else /usr/bin/sudo "$@"; fi
+}
 if command -v tmux >/dev/null && [[ "$OSTYPE" == "linux"* && "$-" == *i* && -z "$SKIP_TMUX" ]]; then
 	function _fake_sudo_no_oa() {
 		if [[ "$*" = *OA ]]; then >&2 echo "Remove the OA?"; else /usr/bin/sudo "$@"; fi
@@ -15,6 +18,8 @@ if command -v tmux >/dev/null && [[ "$OSTYPE" == "linux"* && "$-" == *i* && -z "
 		function sudo() { update_ssh_auth_sock; _fake_sudo_no_oa "$@"; }
 		update_ssh_auth_sock  # Update now
 	fi
+else
+	function sudo() { _fake_sudo_no_oa "$@"; }
 fi
 
 # ------------------- Computer Specific -------------------
@@ -34,12 +39,14 @@ export HISTFILESIZE=1000000000
 if [[ -n "${BASH+x}" ]]; then HISTTIMEFORMAT="%F %T "; fi
 
 # App config
-export FFSEND_HOST='https://send.zwimer.com/'
-if [[ "$HOST" = Cryogenic ]]; then export FFSEND_HOST="http://localhost:1443"; fi
 if command -v vim >/dev/null; then export EDITOR="vim -p"; fi
 if [[ -n "${ZSH+x}" && -n "${HOST+x}" ]]; then export ZSH_COMPDUMP="$ZSH/cache/.zcompdump-$HOST"; fi
 export LS_COLORS="rs=0:di=01;34:ln=01;35:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=01;37;41:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;31:"
 export LSCOLORS="ExFxCxDxBxegedabagacad"
+export CROC_PASS="kS4NaY%pA%7Ywg1uJ%&doWej95FP8%g0"  # This is public so it's ok
+export CROC_STORE_URL="https://croc.zwimer.com"
+export CROC_WEB_URL="https://croc.zwimer.com"
+export CROC_RELAY="relay.croc.zwimer.com:9009"
 export DOCKER_SCAN_SUGGEST=false
 export DOCKER_CLI_HINTS=false
 export DOCKER_BUILDKIT=1
@@ -94,7 +101,7 @@ function get_gnu_compiler() {  # Determine which compiler to use, (may ignore cc
 	local RV i
 	for i in "/opt/homebrew/bin" "/usr/bin" "/bin" "/usr/local/bin"; do
 		if [[ -d "$i" ]]; then
-			RV="$(ls --color=never -- "$i" | grep -E -- "${1//+/\\+}-[0-9]+" | sort -V  | tail -n1)"
+			RV="$(find . -mindepth 1 -maxdepth 1 -name "*$1-[0-9]*" -printf '%f\n' | sort -V | tail -n1)"
 			if [[ -n "$RV" ]]; then echo "$RV"; return; fi
 		fi
 	done
@@ -206,16 +213,11 @@ if command -v fzf >/dev/null; then
 		esac
 	}
 
-	# Auto completion and key bindings
+	# Load bindings
 	if [[ -n "$ZSH_NAME" ]]; then
-		if [[ "$OSTYPE" == 'darwin'* ]]; then
-			source "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh"
-			source "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"
-		elif [[ "$(grep ^ID= /etc/os-release)" == ID=fedora ]]; then
-			source /usr/share/zsh/site-functions/_fzf  # Do not autoload this
-			source /usr/share/fzf/shell/key-bindings.zsh
-		fi
-		# Not loading for ubuntu b/c bug: https://github.com/junegunn/fzf/issues/2790
+		source <(fzf --zsh)
+	elif [[ -n "${BASH+x}" ]]; then
+		source <(fzf --zsh)
 	fi
 fi
 
@@ -288,6 +290,7 @@ elif [[ "$OSTYPE" == 'darwin'* ]]; then
 	if [[ "${ZSH_VERSION:-5.9}" != "5.9" ]]; then
 		>&2 echo "Warning: Different zsh version; maybe finally use new rsync args?"
 	fi
+	function grm() { >&2 echo "Did you mean g rm? grm is gnurm..."; false; }
 
 	# Fixers
 	# shellcheck disable=SC2142
@@ -328,8 +331,12 @@ elif [[ "$OSTYPE" == 'darwin'* ]]; then
 	function strip_quarantine() { sudo xattr -r -d com.apple.quarantine "$1"; }
 	function flush-dns() { sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder; }
 	function brew-list-greedy() {
-		brew info --cask --json=v2 $(brew ls --cask) \
-		| jq -r '.casks[]|select(.auto_updates==true)|.token'
+		brew ls --cask | xargs brew info --cask --json=v2 | jq -r '.casks[]|select(.auto_updates==true)|.token'
+	}
+	function webp2jpeg() {
+		if [[ "$#" -ne 1 ]]; then >&2 echo "Wrong number of arguments"; return; fi
+		if [[ ! -f "$1" ]]; then >&2 echo "File not found: $1"; return; fi
+		sips -s format jpeg -s formatOptions 95 "$1" --out "${1%.*}.jpeg"
 	}
 fi
 hash -r
